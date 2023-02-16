@@ -11,7 +11,7 @@ data_raw <- data_raw %>%
 data_raw$temp = as.factor(data_raw$temp)
 
 # cleaning up dates from lizard db
-`data_final` <-data_raw %>%
+data_final <-data_raw %>%
   # Fix the messed up date columns
   # Here I'm separating all of the hatch dates into their components of year, month, and day.
   separate(col = 'hatch_date_.year.m.day.', into = c('y', 'm', 'd'), sep = "/") %>%
@@ -33,7 +33,8 @@ data_raw$temp = as.factor(data_raw$temp)
   # Using the lubridate package, I'm turning the hatch_date column I just made into a datetime object with structure 'Year/Month/Day' with ymd()
   mutate(hatch_date = ymd(hatch_date),
          dev_time = ifelse(is.na(hatch_date), NA, difftime(hatch_date, egg_date, units = "days")),
-         days_alive = ifelse(is.na(hatch_date), NA, difftime(death_date, hatch_date, units = "days")))
+         days_alive = ifelse(is.na(hatch_date), NA, difftime(death_date, hatch_date, units = "days"))) %>% 
+  mutate(hatch_mass = as.numeric(hatch_mass))
 
 # separate the two species into df
 guich_df <-data_final %>% filter(species == "guichenoti")
@@ -43,6 +44,9 @@ deli_df <- data_final %>% filter(species == "delicata")
 ###############################################
 ############## Guichenoti #####################
 ###############################################
+######
+# Guichenoti Survival Analysis
+######
 # Quick look trt (temp and yolk)
 ggstatsplot::ggbarstats(
   data = deli_df,
@@ -50,22 +54,66 @@ ggstatsplot::ggbarstats(
   y = trt) +
   labs(caption = NULL) 
 
-# Guich model
+# Guich survival model
 guich_model <- glmer(mortality ~temp + yolk +  temp:yolk+ (1|Egg_ID), data = guich_df, family = "binomial") 
 summary(guich_model)
 car::Anova(guich_model, type=3)
 check_model(guich_model)
-
 # df for figure
-guich_dat <- emmeans(guich_model, specs = c("temp", "yolk"), type = "response") %>% 
+guich_dat <- emmeans(guich_model, specs = c("temp", "yolk"), type = "response") %>%
   summary() %>%
   as.data.frame()
-# percent diff
+# percent diff for figure
 guich_23 <- round((0.3066667 - 0.1509434),digits = 2)
 guich_28 <- round((0.3424657 - 0.1200000),digits = 2)
 
+
+######
+# Guichenoti offspring mass on live subjects - no interaction; overall yolk effect
+######
+guich_alive <- guich_df %>% filter(liz_status == "ALIVE") 
+Guich_mass_model <- lm(log(hatch_mass)~ temp + yolk +  temp:yolk, data = guich_alive)
+# Checks and plots
+summary(Guich_mass_model) 
+anova(Guich_mass_model)
+check_model(Guich_mass_model)
+Guich_mass_emm <- emmeans(Guich_mass_model, specs = c("yolk"), type = "response") %>% # back transform from log scale
+  summary() %>%
+  as.data.frame()
+plot(emmeans(Guich_mass_model, specs = c("yolk"), type = "response"))
+
+
+######
+# Guichenoti offspring SVL on live subjects - no interaction; no differences
+######
+Guich_svl_model <- lm(log(hatch_svl)~ temp + yolk +  temp:yolk, data = guich_alive)
+# Checks and plots
+summary(Guich_svl_model) 
+anova(Guich_svl_model)
+check_model(Guich_svl_model)
+
+
+######
+# Guichenoti offspring BCI (OLS residual difference from svl and mass
+######
+guich_bci <- guich_alive %>% # filter out NA's to keep residuals from lm
+  filter_at(vars(hatch_svl, hatch_mass), all_vars(!is.na(.)))
+# calcualting residuals from OLS Regression of mass and SVL
+guich_fit <- lm(log(hatch_svl) ~ log(hatch_mass), data = guich_bci)
+check_model(guich_fit)
+guich_bci$BCI <- residuals(guich_fit)
+
+# BCI test on yolk and temp - residuals are from ols of svl and mass- nothing
+Guich_bci_model <- lm(BCI~ temp + yolk +  temp:yolk, data = guich_bci)
+# Checks and plots
+summary(Guich_bci_model) 
+anova(Guich_bci_model)
+check_model(Guich_bci_model)
+            
+
+
 ########
-# Guich figure
+# Guich figures
 ########
 legend_title <- "Resource Treatment"
 pd = position_dodge(.8)
@@ -113,6 +161,9 @@ Guich_final <- ggdraw() +
 ###############################################
 ##############  Delicata  #####################
 ###############################################
+######
+# Delicata Survival Analysis
+######
 # quick look trt (temp and yolk)
 ggstatsplot::ggbarstats(
   data = deli_df,
@@ -120,12 +171,11 @@ ggstatsplot::ggbarstats(
   y = trt) +
   labs(caption = NULL) 
 
-# model
+# Survival model
 deli_model <- glmer(mortality ~temp + yolk +  temp:yolk+ (1|Egg_ID), data = deli_df, family = "binomial") 
 summary(deli_model)
 car::Anova(deli_model, type=3)
 check_model(deli_model)
-
 # df for figure
 deli_dat <- emmeans(deli_model, specs = c("temp", "yolk"), type = "response") %>% 
   summary() %>%
@@ -134,12 +184,68 @@ deli_dat <- emmeans(deli_model, specs = c("temp", "yolk"), type = "response") %>
 deli_23 <- round((0.33035714 - 0.09677419),digits = 2)
 deli_28 <- round((0.26415094 - 0.10752688),digits = 2)
 
+
+######
+# Delienoti offspring mass on live subjects - no interaction; overall yolk effect
+######
+Deli_alive <- deli_df %>% filter(liz_status == "ALIVE") 
+Deli_mass_model <- lm(log(hatch_mass)~ temp + yolk +  temp:yolk, data = Deli_alive)
+# Checks and plots
+summary(Deli_mass_model) 
+anova(Deli_mass_model)
+check_model(Deli_mass_model)
+Deli_mass_emm <- emmeans(Deli_mass_model, specs = c("yolk"), type = "response") %>% # back transform from log scale
+  summary() %>%
+  as.data.frame()
+plot(emmeans(Deli_mass_model, specs = c("yolk"), type = "response"))
+
+
+######
+# Delienoti offspring SVL on live subjects - no interaction; yolk effects
+######
+Deli_svl_model <- lm(log(hatch_svl)~ temp + yolk +  temp:yolk, data = Deli_alive)
+# Checks and plots
+summary(Deli_svl_model) 
+anova(Deli_svl_model)
+check_model(Deli_svl_model)
+# extracting differences
+Deli_svl_emm <- emmeans(Deli_svl_model, specs = c("yolk"), type = "response") %>% # back transform from log scale
+  summary() %>%
+  as.data.frame()
+plot(emmeans(Deli_svl_model, specs = c("yolk"), type = "response"))
+
+
+######
+# Delienoti offspring BCI (OLS residual difference from svl and mass
+######
+Deli_bci <- Deli_alive %>% # filter out NA's to keep residuals from lm
+  filter_at(vars(hatch_svl, hatch_mass), all_vars(!is.na(.)))
+# calcualting residuals from OLS Regression of mass and SVL
+Deli_fit <- lm(log(hatch_svl) ~ log(hatch_mass), data = Deli_bci)
+check_model(Deli_fit)
+Deli_bci$BCI <- residuals(Deli_fit)
+
+# BCI test on yolk and temp - residuals are from ols of svl and mass
+# yolk and temp effects; no interaction
+Deli_bci_model <- lm(BCI~ temp + yolk +  temp:yolk, data = Deli_bci)
+# Checks and plots
+summary(Deli_bci_model) 
+anova(Deli_bci_model)
+check_model(Deli_bci_model)
+# extracting differences
+Deli_bci_emm <- emmeans(Deli_bci_model, specs = c("yolk", "temp"), type = "response") %>% # back transform from log scale
+  summary() %>%
+  as.data.frame()
+plot(emmeans(Deli_bci_model, specs = c("yolk", "temp"), type = "response"))
+
+
 ########
 # Delicata figures
 ########
 legend_title <- "Resource Treatment"
 pd = position_dodge(.8)
 
+####### Survival on temp 
 deli_fig <-ggplot(deli_dat, aes(x = temp,y= prob, group = yolk, color = yolk)) +
   geom_point(shape = 19, size  = 8, position = pd) +
   geom_errorbar(aes(ymin  = prob+SE,
@@ -179,8 +285,10 @@ Deli_final <- ggdraw() +
   draw_plot(deli_fig) +
   draw_image(Deli_raster, scale = .6, x = -.15, y= 0.33) 
 
-
 # combind both plots
 Final_survival <- plot_grid(Guich_final, Deli_final, labels = c('A', 'B'))
+
+
+
 
 
