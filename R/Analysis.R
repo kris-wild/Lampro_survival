@@ -135,7 +135,7 @@ deli_23 <- round((0.33035714 - 0.09677419),digits = 2)
 deli_28 <- round((0.26415094 - 0.10752688),digits = 2)
 
 ########
-# Figures
+# Delicata figures
 ########
 legend_title <- "Resource Treatment"
 pd = position_dodge(.8)
