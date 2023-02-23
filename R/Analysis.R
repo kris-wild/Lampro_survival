@@ -74,6 +74,21 @@ post_Guich_m1 <- posterior_samples(Guich_m1_brms, pars = "^b")
 variable.names(post_Guich_m1)
 
 
+# survival and yolk 
+yolk_a <- as.array(post_Guich_m1[,"b_Intercept"])
+yolk_c <- as.array(yolk_a +  post_Guich_m1[,"b_yolkC"])
+
+Yolk_survival <- cbind(yolk_a, yolk_c)
+mcmc_areas(Yolk_survival, 
+           pars = c("yolk_a", "yolk_c"),
+           prob = 0.95, 
+           prob_outer = 0.99, 
+           point_est = "mean")+
+  theme_bw() +
+  theme(axis.text = element_text(size=12)) +
+  theme(legend.title = element_text(colour="white", size = 16, face='bold')) +
+  labs(y = TeX("Yolk treatment")) 
+
 
 ###############################################
 ############## Delicata #####################
@@ -117,7 +132,6 @@ plot(conditional_effects(Deli_m1_brms, "temp:yolk", points = TRUE))
 # egg mass by yolk treatment on survival
 plot(conditional_effects(Deli_m1_brms, "egg_mass_final:yolk"), ask = FALSE)
 
-
 # extracting posteriors
 post_Deli_m1 <- posterior_samples(Deli_m1_brms, pars = "^b")
 variable.names(post_Deli_m1)
@@ -126,20 +140,6 @@ variable.names(post_Deli_m1)
 
 
 
-
-yolk_a <- as.array(post_Guich_m1[,"b_Intercept"])
-yolk_c <- as.array(yolk_a +  post_Guich_m1[,"b_yolkC"])
-
-Yolk_survival <- cbind(yolk_a, yolk_c)
-mcmc_areas(Yolk_survival, 
-           pars = c("yolk_a", "yolk_c"),
-           prob = 0.95, 
-           prob_outer = 0.99, 
-           point_est = "mean")+
-  theme_bw() +
-  theme(axis.text = element_text(size=12)) +
-  theme(legend.title = element_text(colour="white", size = 16, face='bold')) +
-  labs(y = TeX("Sex class"), x = "Slope Differences") 
 
 
 
