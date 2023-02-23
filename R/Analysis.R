@@ -33,17 +33,19 @@ pmcmc <- function(x){
 # Guichenoti Survival Analysis
 ######
 # Guich survival model
-Guich_m1_brms <- brm(mortality ~ yolk + temp+ temp:yolk+ scale(egg_mass_final) + (1|clutch),  
+Guich_m1_brms <- brm(mortality ~ yolk + temp+ temp:yolk+ 
+                       scale(egg_mass_final) + # egg mass scaled
+                       (1|clutch),  # clutch random factor
                      family = bernoulli(link = "logit"), 
                      data = guich_df, 
                      iter= 5000, warmup = 1000, 
                      thin = 4, cores = 8)
 
+
 ####################
 # Model 1 checks: lags, residuals, r2, summary
 ####################
 # checking lags for this model 
-Guich_m1_brms <- readRDS("R/Guich_m1_brms")
 draws <- as.array(Guich_m1_brms)
 mcmc_acf(draws,  pars = c("b_Intercept","b_yolkC", "b_temp28", "b_yolkC:temp28", "b_scaleegg_mass_final"), lags =10)
 # plots
@@ -52,18 +54,39 @@ plot(Guich_m1_brms)
 bayes_R2(Guich_m1_brms)
 summary(Guich_m1_brms)
 
+# stan plot
+stanplot(Guich_m1_brms, 
+         type = "areas",
+         prob = 0.95)
+
 # overall egg mass on survival
 plot(conditional_effects(Guich_m1_brms, "egg_mass_final"), ask = FALSE)
 
 # temperature X yolk treatment interaction
-plot(conditional_effects(Guich_m1_brms, "temp:yolk"), ask = FALSE)
+plot(conditional_effects(Guich_m1_brms, "temp:yolk", points = TRUE))
 
 # egg mass by yolk treatment on survival
 plot(conditional_effects(Guich_m1_brms, "egg_mass_final:yolk"), ask = FALSE)
 
+
 # extracting posteriors
 post_Guich_m1 <- posterior_samples(Guich_m1_brms, pars = "^b")
 variable.names(post_Guich_m1)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 yolk_a <- as.array(post_Guich_m1[,"b_Intercept"])
 yolk_c <- as.array(yolk_a +  post_Guich_m1[,"b_yolkC"])
