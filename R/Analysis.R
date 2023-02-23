@@ -33,7 +33,7 @@ pmcmc <- function(x){
 # Guichenoti Survival Analysis
 ######
 # Guich survival model
-Guich_m1_brms <- brm(mortality ~ yolk + temp+ temp:yolk+ 
+Guich_m1_brms <- brm(mortality ~ yolk + temp+ temp:yolk  + 
                        scale(egg_mass_final) + # egg mass scaled
                        (1|clutch),  # clutch random factor
                      family = bernoulli(link = "logit"), 
@@ -75,13 +75,52 @@ variable.names(post_Guich_m1)
 
 
 
+###############################################
+############## Delicata #####################
+###############################################
+######
+# Deli Survival Analysis
+######
+# Deli survival model
+Deli_m1_brms <- brm(mortality ~ yolk + temp+ temp:yolk  + 
+                       scale(egg_mass_final) + # egg mass scaled
+                       (1|clutch),  # clutch random factor
+                     family = bernoulli(link = "logit"), 
+                     data = deli_df, 
+                     iter= 5000, warmup = 1000, 
+                     thin = 4, cores = 8)
 
 
+####################
+# Model 1 checks: lags, residuals, r2, summary
+####################
+# checking lags for this model 
+draws <- as.array(Deli_m1_brms)
+mcmc_acf(draws,  pars = c("b_Intercept","b_yolkC", "b_temp28", "b_yolkC:temp28", "b_scaleegg_mass_final"), lags =10)
+# plots
+plot(Deli_m1_brms)
+#R2 and summary of full model
+bayes_R2(Deli_m1_brms)
+summary(Deli_m1_brms)
+
+# stan plot
+stanplot(Deli_m1_brms, 
+         type = "areas",
+         prob = 0.95)
+
+# overall egg mass on survival
+plot(conditional_effects(Deli_m1_brms, "egg_mass_final"), ask = FALSE)
+
+# temperature X yolk treatment interaction
+plot(conditional_effects(Deli_m1_brms, "temp:yolk", points = TRUE))
+
+# egg mass by yolk treatment on survival
+plot(conditional_effects(Deli_m1_brms, "egg_mass_final:yolk"), ask = FALSE)
 
 
-
-
-
+# extracting posteriors
+post_Deli_m1 <- posterior_samples(Deli_m1_brms, pars = "^b")
+variable.names(post_Deli_m1)
 
 
 
