@@ -1,4 +1,4 @@
-pacman::p_load("dplyr","lme4", "MASS", "brms", "MCMCglmm", "quantreg","lmerTest", "emmeans", "latex2exp", "DHARMa", "tidybayes", "bayesplot", "rstanarm", "plotrix", "emmeans", "patchwork", "ggExtra", "marginaleffects", "gridExtra", "cowplot", "reshape2", "bayestestR","performance", "cowplot", "patchwork", "png", "magick", "ggplot2")
+pacman::p_load("dplyr","lme4", "MASS", "brms", "MCMCglmm", "quantreg","lmerTest", "latex2exp", "tidybayes", "bayesplot", "rstanarm", "plotrix", "emmeans", "ggExtra", "marginaleffects", "gridExtra", "bayestestR","performance", "cowplot", "patchwork", "png", "magick", "ggplot2")
 
 # import data (be sure to change Y/N to 0/1)
 data <- read.csv("Data/Lizard_Db_final.csv", head = T) %>% 
@@ -38,13 +38,12 @@ Guich_m1_brms <- brm(mortality ~ yolk + temp+ temp:yolk+ scale(egg_mass_final) +
                      data = guich_df, 
                      iter= 5000, warmup = 1000, 
                      thin = 4, cores = 8)
-saveRDS(Guich_m1_brms, "models/Guich_m1_brms")
 
 ####################
 # Model 1 checks: lags, residuals, r2, summary
 ####################
 # checking lags for this model 
-Guich_m1_brms <- readRDS("models/Guich_m1_brms")
+Guich_m1_brms <- readRDS("R/Guich_m1_brms")
 draws <- as.array(Guich_m1_brms)
 mcmc_acf(draws,  pars = c("b_Intercept","b_yolkC", "b_temp28", "b_yolkC:temp28", "b_scaleegg_mass_final"), lags =10)
 # plots
