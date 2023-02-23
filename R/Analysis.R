@@ -68,15 +68,32 @@ plot(conditional_effects(Guich_m1_brms, "temp:yolk", points = TRUE))
 # egg mass by yolk treatment on survival
 plot(conditional_effects(Guich_m1_brms, "egg_mass_final:yolk"), ask = FALSE)
 
-
-# extracting posteriors
+##############################
+####### Extracting posteriors
+##############################
 post_Guich_m1 <- posterior_samples(Guich_m1_brms, pars = "^b")
 variable.names(post_Guich_m1)
 
+### yolk ablation posteriors
+yolk_a_23 <- as.array(post_Guich_m1[,"b_Intercept"]) # at 23C
+yolk_a_28 <- as.array(post_Guich_m1[,"b_Intercept"]+ (post_Guich_m1[,"b_temp28"])) # at A 28C
+#probs
+prob_a_23 <- exp(yolk_a_23)/(1+exp(yolk_a_23))
+prob_a_28 <- exp(yolk_a_28)/(1+exp(yolk_a_28))
 
-# survival and yolk 
-yolk_a <- as.array(post_Guich_m1[,"b_Intercept"])
-yolk_c <- as.array(yolk_a +  post_Guich_m1[,"b_yolkC"])
+
+### temp posteriors -control
+temp_23 <- as.array(post_Guich_m1[,"b_Intercept"] + (post_Guich_m1[,"b_yolkC"])) # at 23C
+temp_28 <- as.array(temp_23 - (post_Guich_m1[,"b_temp28"])) # at 28C
+#probs
+prob_23 <- exp(temp_23)/(1+exp(temp_23))
+prob_28 <- exp(temp_28)/(1+exp(temp_28)) # check this
+
+
+
+
+
+
 
 Yolk_survival <- cbind(yolk_a, yolk_c)
 mcmc_areas(Yolk_survival, 
