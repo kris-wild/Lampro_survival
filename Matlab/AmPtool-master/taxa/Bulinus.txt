@@ -1,0 +1,3 @@
+Bulinus_globosus
+Bulinus_tropicus
+Bulinus_truncatus

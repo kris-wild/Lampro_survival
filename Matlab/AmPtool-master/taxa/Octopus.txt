@@ -1,0 +1,10 @@
+Octopus_bimaculoides
+Octopus_briareus
+Octopus_cyanea
+Octopus_joubini
+Octopus_maya
+Octopus_mimus
+Octopus_pallidus
+Octopus_tehuelchus
+Octopus_tetricus
+Octopus_vulgaris

@@ -1,0 +1,298 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>prt_species_list</title><meta name="generator" content="MATLAB 9.10"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2022-06-06"><meta name="DC.source" content="prt_species_list.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>prt_species_list</h1><!--introduction--><pre>deletes and writes ../../deblab/add_my_pet/species_list.html</pre><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#3">Syntax</a></li><li><a href="#4">Description</a></li><li><a href="#5">Remarks</a></li><li><a href="#7">subfunction open_species_list_html</a></li><li><a href="#8">subfunction prt_species_row</a></li><li><a href="#9">subfunction close_species_list</a></li></ul></div><h2 id="3">Syntax</h2><p><a href="../prt_species_list.m"><b>prt_species_list</b></a></p><h2 id="4">Description</h2><p>deletes and writes ../../deblab/add_my_pet/species_list.html</p><h2 id="5">Remarks</h2><div><ul><li>Uses subfunctions open_species_list_html, prt_species_row and close_species_list_html</li><li>Reads from allStat and each row in the table has an id</li></ul></div><h2 id="7">subfunction open_species_list_html</h2><h2 id="8">subfunction prt_species_row</h2><h2 id="9">subfunction close_species_list</h2><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2021a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% prt_species_list
+%  deletes and writes ../../deblab/add_my_pet/species_list.html 
+
+%%
+function prt_species_list
+% created by Bas Kooijman; modified 2015/04/14 Starrlight Augustine & Goncalo Marques; 
+%   modified 2015/07/21, 2015/08/28 Starrlight Augustine; 
+% 2016/11/05, 2017/10/13, 2017/10/24, 2018/01/25, 2019/12/22, 2021/02/20, 2022/01/08, 2022/06/05  Bas Kooijman
+
+%% Syntax
+% <../prt_species_list.m *prt_species_list*>
+
+%% Description
+% deletes and writes ../../deblab/add_my_pet/species_list.html 
+
+%% Remarks
+% * Uses subfunctions open_species_list_html, prt_species_row and close_species_list_html
+% * Reads from allStat and each row in the table has an id
+
+WD = cdCur;
+% get basic data for species_list
+data = read_allStat('phylum', 'class', 'order', 'family', 'species', 'species_en', 'model', 'MRE', 'SMSE', 'COMPLETE', 'data'); 
+n = size(data,1); % number of entries
+
+fid_Spec = open_species_list_html; % open up species_list.html for writing and delete the old file
+
+for i = 1:n % scan entries
+  prt_species_row(fid_Spec, data(i,:)) % write species row
+end 
+
+close_species_list(fid_Spec);      % close species_list.html
+
+cd(WD);
+
+end
+
+%% subfunction open_species_list_html 
+ 
+function fid_Spec = open_species_list_html
+% opens up species_list.html for reading and writing
+
+fid_Spec = fopen('../../deblab/add_my_pet/species_list.html', 'w+'); % open file for writing, delete existing content
+  
+% make head and header for species_list.html :
+fprintf(fid_Spec, '<!DOCTYPE html>\n');
+fprintf(fid_Spec, '<html>\n\n'); % open html
+fprintf(fid_Spec, '<head>\n');   % open head
+fprintf(fid_Spec, '  <title>Species List</title>\n');
+fprintf(fid_Spec, '  <link rel="stylesheet" type="text/css" href="sys/style.css">\n');
+fprintf(fid_Spec, '  <script src="sys/dropdown.js"></script>\n');
+fprintf(fid_Spec, '  <script src="sys/w3data.js"></script>\n');
+fprintf(fid_Spec, '  <style>\n');
+fprintf(fid_Spec, '    .Search {\n');
+fprintf(fid_Spec, '      background-image: url(''img/searchicon.png''); /* Add a search icon to input */\n');
+fprintf(fid_Spec, '      background-position: 2px -10px; /* Position the search icon */\n');
+fprintf(fid_Spec, '      background-repeat: no-repeat; /* Do not repeat the icon image */\n');
+fprintf(fid_Spec, '      width: 10%%; /* Width of search field */\n');
+fprintf(fid_Spec, '      font-size: 14px; /* Increase font-size */\n');
+fprintf(fid_Spec, '      padding: 5px 10px 7px 40px; /* Add some padding */\n');
+fprintf(fid_Spec, '      border: 1px solid #ddd; /* Add a grey border */\n');
+fprintf(fid_Spec, '      margin-bottom: 12px; /* Add some space below the input */\n');
+fprintf(fid_Spec, '    }\n\n');
+
+fprintf(fid_Spec, '    #speciesTable {\n');
+fprintf(fid_Spec, '      border-collapse: collapse; /* Collapse borders */\n');
+fprintf(fid_Spec, '      width: 100%%; /* Full-width */\n');
+fprintf(fid_Spec, '    }\n\n');
+
+fprintf(fid_Spec, '    #speciesTable th, #speciesTable td {\n');
+fprintf(fid_Spec, '      text-align: left; /* Left-align text */\n');
+fprintf(fid_Spec, '      padding: 12px; /* Add padding */\n');
+fprintf(fid_Spec, '    }\n\n');
+
+fprintf(fid_Spec, '    #speciesTable tr.header, #speciesTable tr:hover {\n');
+fprintf(fid_Spec, '      /* Add a grey background color to the table header and on hover */\n');
+fprintf(fid_Spec, '      background-color: #f1f1f1;\n');
+fprintf(fid_Spec, '    }\n\n');
+
+fprintf(fid_Spec, '    .mod {\n'); % model
+%fprintf(fid_Spec, '      text-align: center;\n');
+fprintf(fid_Spec, '      background-color: #ffc6a5;\n');
+fprintf(fid_Spec, '    }\n\n');
+
+fprintf(fid_Spec, '    .mre {\n'); % MRE
+%fprintf(fid_Spec, '      text-align: center;\n');
+fprintf(fid_Spec, '      background-color: #ffe7c6;\n');
+fprintf(fid_Spec, '    }\n\n');
+
+fprintf(fid_Spec, '    .smse {\n'); % SMSE
+%fprintf(fid_Spec, '      text-align: center;\n');
+fprintf(fid_Spec, '      background-color: #ffe7c6;\n');
+fprintf(fid_Spec, '    }\n\n');
+
+fprintf(fid_Spec, '    .com {\n'); % COMPLETE
+%fprintf(fid_Spec, '      text-align: center;\n');
+fprintf(fid_Spec, '      background-color: #ffce9c;\n');
+fprintf(fid_Spec, '    }\n\n');
+
+fprintf(fid_Spec, '    .d0 {\n'); % data_0
+fprintf(fid_Spec, '      background-color: #ffffc6;\n');
+fprintf(fid_Spec, '    }\n\n');
+
+fprintf(fid_Spec, '    .d1 {\n'); % data_1
+fprintf(fid_Spec, '      background-color: #ffff9c;\n');
+fprintf(fid_Spec, '    }\n');
+
+fprintf(fid_Spec, '  </style>\n');
+
+fprintf(fid_Spec, '</head>\n\n'); % close head
+
+fprintf(fid_Spec, '<body>\n\n');  % open body
+
+fprintf(fid_Spec, '<div w3-include-html="sys/wallpaper_amp.html"></div>\n');
+fprintf(fid_Spec, '<div w3-include-html="sys/toolbar_amp.html"></div>\n');
+	
+fprintf(fid_Spec, '<div id = "main">\n');
+fprintf(fid_Spec, '  <div id = "main-wrapper-species">    \n');
+fprintf(fid_Spec, '    <div id="contentFull">\n\n');
+fprintf(fid_Spec, '      <H2><a href="" title="Goto entries by clicking on entry names">Species list: taxonomic view</a></H2>\n\n');
+
+fprintf(fid_Spec, '      <div>\n');
+fprintf(fid_Spec, '        <input type="text" class="Search" id="Phylum" onkeyup="searchList(''Phylum'',0)" placeholder="Phylum ..">\n');
+fprintf(fid_Spec, '        <input type="text" class="Search" id="Class"  onkeyup="searchList(''Class'',1)" placeholder="Class ..">\n');
+fprintf(fid_Spec, '        <input type="text" class="Search" id="Order"  onkeyup="searchList(''Order'',2)" placeholder="Order ..">\n');
+fprintf(fid_Spec, '        <input type="text" class="Search" id="Family" onkeyup="searchList(''Family'',3)" placeholder="Family ..">\n');
+fprintf(fid_Spec, '        <input type="text" class="Search" id="Species" onkeyup="searchList(''Species'',4)" placeholder="Species ..">\n');
+fprintf(fid_Spec, '        <input type="text" class="Search" id="Common name" onkeyup="searchList(''Common name'',5)" placeholder="Common name ..">\n');
+fprintf(fid_Spec, '        <input type="text" class="Search" id="Model" onkeyup="searchList(''Model'',6)" placeholder="Model ..">\n');
+fprintf(fid_Spec, '      </div>\n\n');
+
+fprintf(fid_Spec, '      <table id="speciesTable">\n'); % open species table
+fprintf(fid_Spec, '        <tr HEIGHT=60 BGCOLOR = "#FFE7C6">\n');
+fprintf(fid_Spec, '          <th><a class="link" target = "_blank" href="phyla.html">phylum</a></th>\n');
+fprintf(fid_Spec, '          <th>class</th> <th>order</th> <th>family</th> <th>species</th> <th>common name</th>\n');
+fprintf(fid_Spec, '          <th BGCOLOR="#FFC6A5"><a class="link" target="_blank" href="https://add-my-pet.github.io/DEBportal/docs/Typified_models.html">&nbsp; model &nbsp;</a></th>\n');
+fprintf(fid_Spec, '          <th BGCOLOR="#FFE7C6"><a class="link" target="_blank" href="https://add-my-pet.github.io/DEBportal/docs/AmPestimation.html">&nbsp; MRE &nbsp;</a></th>\n');
+fprintf(fid_Spec, '          <th BGCOLOR="#FFE7C6"><a class="link" target="_blank" href="https://add-my-pet.github.io/DEBportal/docs/AmPestimation.html" >&nbsp; SMSE &nbsp;</a></th>\n');
+fprintf(fid_Spec, '          <th BGCOLOR="#FFCE9C"><a class="link" target="_blank" href="https://add-my-pet.github.io/DEBportal/docs/Completeness.html" >&nbsp; complete &nbsp;</a></th>\n');
+fprintf(fid_Spec, '          <th BGCOLOR="#FFFFC6"><a class="link" target="_blank" href="https://add-my-pet.github.io/DEBportal/docs/AmPestimation.html" >&nbsp; data &nbsp;</a></th>\n');
+fprintf(fid_Spec, '        </tr>\n\n');
+
+end
+
+%% subfunction prt_species_row
+
+function prt_species_row(fid_Spec, id)
+% places a row in species_list.html which has previously been opened for reading and writing
+
+  % unpack data
+  phylum = id{1}; class = id{2}; order = id{3}; family = id{4}; species = id{5}; species_en = id{6}; 
+  model = id{7}; MRE = id{8}; SMSE = id{9}; COMPLETE = id{10}; data = id{11};
+  
+  fprintf(fid_Spec, '        <tr id="%s">\n', species); % open and identify the species row
+
+  % edit species and species_en
+  species_prt = strrep(species, '_', ' ');      % remove underscores 
+  species_txt = ['''', species, ''''];
+  if species_en(1) >= 'a' && species_en(1)<='z' % put first letter of common name in capital
+    species_en(1) = char(species_en(1) - 32);
+  end
+
+  % separate zero- and uni-variate data
+  sel = ~contains(data, '-'); data_0 = data(sel); data_1 = data(~sel);
+  n_data_0 = length(data_0); n_data_1 = length(data_1); 
+  
+  fprintf(fid_Spec, '          <td>%s</td>  <td>%s</td> <td>%s</td> <td>%s</td>\n', phylum, class, order, family);
+  fprintf(fid_Spec, '          <td><button onclick="lnk(%s)">%s</button></td> <td>%s</td>\n', species_txt, species_prt, species_en);
+  fprintf(fid_Spec, '          <td class="mod">%s</td> <td class="mre">%8.3f</td> <td class="smse">%8.3f</td> <td class="com">%g</td>\n', model, MRE, SMSE, COMPLETE);
+  fprintf(fid_Spec, '          ');
+  for i = 1:n_data_0 % scan zero-variate data
+    fprintf(fid_Spec, '<td class="d0">%s</td> ', data_0{i});      
+  end
+  fprintf(fid_Spec, '\n          ');
+  for i = 1:n_data_1 % scan univariate data
+    fprintf(fid_Spec, '<td class="d1">%s</td> ', data_1{i});  
+  end
+  fprintf(fid_Spec, '\n        </tr>\n\n'); % close the species row
+end
+
+%% subfunction close_species_list
+
+function close_species_list(fid_Spec)
+% completes the table of species and closes species_list.html
+
+fprintf(fid_Spec, '      </table>\n\n'); % close species table
+
+fprintf(fid_Spec, '      <script>\n');
+fprintf(fid_Spec, '        function searchList(idBox,nBox) {\n');
+fprintf(fid_Spec, '          // Declare variables\n');
+fprintf(fid_Spec, '          var input, filter, table, tr, td, i;\n');
+fprintf(fid_Spec, '          input = document.getElementById(idBox);\n');
+fprintf(fid_Spec, '          filter = input.value.toUpperCase();\n');
+fprintf(fid_Spec, '          table = document.getElementById("speciesTable");\n');
+fprintf(fid_Spec, '          tr = table.getElementsByTagName("tr");\n\n');
+
+fprintf(fid_Spec, '          // Loop through all table rows, and hide those who don''t match the search query\n');
+fprintf(fid_Spec, '          for (i = 0; i < tr.length; i++) {\n');
+fprintf(fid_Spec, '          td = tr[i].getElementsByTagName("td")[nBox];\n');
+fprintf(fid_Spec, '          if (td) {\n');
+fprintf(fid_Spec, '            if (td.innerhtml.toUpperCase().indexOf(filter) > -1) {\n');
+fprintf(fid_Spec, '              tr[i].style.display = "";\n');
+fprintf(fid_Spec, '            } else {\n');
+fprintf(fid_Spec, '              tr[i].style.display = "none";\n');
+fprintf(fid_Spec, '              }\n');
+fprintf(fid_Spec, '            }\n');
+fprintf(fid_Spec, '          }\n');
+fprintf(fid_Spec, '        }\n\n');
+
+fprintf(fid_Spec, '        function lnk(id) {\n');
+fprintf(fid_Spec, '          window.open("entries_web/" + id + "/" + id + "_res.html");\n');
+fprintf(fid_Spec, '        }\n');
+fprintf(fid_Spec, '      </script>\n\n');
+
+fprintf(fid_Spec, '    </div> <!REPLACE_WITH_DASH_DASH end of content REPLACE_WITH_DASH_DASH>\n\n');
+
+fprintf(fid_Spec, '    <div w3-include-html="sys/footer_amp.html"></div>\n');
+fprintf(fid_Spec, '    <script>w3IncludeHTML();</script>\n\n');
+
+fprintf(fid_Spec, '  </div> <!REPLACE_WITH_DASH_DASH main wrapper REPLACE_WITH_DASH_DASH>\n');
+fprintf(fid_Spec, '</div> <!REPLACE_WITH_DASH_DASH main REPLACE_WITH_DASH_DASH>\n');
+
+fprintf(fid_Spec, '</body>\n'); % close body
+fprintf(fid_Spec, '</html>\n'); % close html
+fclose(fid_Spec);
+end
+##### SOURCE END #####
+--></body></html>

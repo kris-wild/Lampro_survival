@@ -1,0 +1,201 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>elas2_lossfun</title><meta name="generator" content="MATLAB 9.10"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2022-01-15"><meta name="DC.source" content="elas2_lossfun.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>elas2_lossfun</h1><!--introduction--><p>gets first and second order elasticity coefficients of loss function</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#3">Syntax</a></li><li><a href="#4">Description</a></li><li><a href="#5">Remarks</a></li></ul></div><h2 id="3">Syntax</h2><p>[elas2, elas, nm_elas, lf] = <a href="../elas2_lossfun.m"><b>elas2_lossfun</b></a> (my_pet, del)</p><h2 id="4">Description</h2><p>Gets the first and second order elasticity coefficients of loss function for free parameters. Assumes local existence of mydata_my_pet.m, predict_my_pet.m and results_my_pet.mat</p><p>Input:</p><div><ul><li>my_pet: character string with name of entry</li><li>del: optional scalar with mutiplication factor for perturbation of parameters (default 1e-6)</li></ul></div><p>Output:</p><div><ul><li>elas2: vector of 2nd order elasticity coefficients of loss function</li><li>elas: vector of elasticity coefficients of loss function</li><li>nm_elas: cell-string with names of free parameters</li><li>lf: value of the loss function</li></ul></div><h2 id="5">Remarks</h2><p>the output does not include contributions from augmented terms.&lt;br&gt; Uses global "lossfunction" with strings re, sb or su, see DEBtool_M/lib/regr, default lossfunction = 'sb' Takes the mean of foreward and backward perturbations of parameters. See <a href="elas_lossfun.html"><b>elas_lossfun</b></a> for first order elasticities only. See <a href="prt_elas.html"><b>prt_elas</b></a> for printing elasticities to html</p><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2021a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% elas2_lossfun
+% gets first and second order elasticity coefficients of loss function
+
+%%
+function [elas2, elas, nm_elas, lf] = elas2_lossfun(my_pet, del)
+% created by Bas Kooijman 2022/01/09, modified by Dina Lika 2022/01/15
+
+%% Syntax
+% [elas2, elas, nm_elas, lf] = <../elas2_lossfun.m *elas2_lossfun*> (my_pet, del)
+
+%% Description
+% Gets the first and second order elasticity coefficients of loss function for free parameters.
+% Assumes local existence of mydata_my_pet.m, predict_my_pet.m and results_my_pet.mat
+%
+% Input:
+%
+% * my_pet: character string with name of entry
+% * del: optional scalar with mutiplication factor for perturbation of parameters (default 1e-6)
+%
+% Output:
+%
+% * elas2: vector of 2nd order elasticity coefficients of loss function
+% * elas: vector of elasticity coefficients of loss function
+% * nm_elas: cell-string with names of free parameters
+% * lf: value of the loss function
+%
+%% Remarks
+% the output does not include contributions from augmented terms.<br>
+% Uses global "lossfunction" with strings re, sb or su, see DEBtool_M/lib/regr, default lossfunction = 'sb'
+% Takes the mean of foreward and backward perturbations of parameters.
+% See <elas_lossfun.html *elas_lossfun*> for first order elasticities only.
+% See <prt_elas.html *prt_elas*> for printing elasticities to html
+  
+  global lossfunction
+  
+  fileLossfunc = ['lossfunction_', lossfunction];
+
+  if ~exist('del','var')
+    del = 1e-6;
+  end
+  
+  load(['results_', my_pet], 'par'); 
+  [data, auxData, ~, ~, weights] = feval(['mydata_', my_pet]);
+  prdData = feval(['predict_', my_pet], par, data, auxData);
+  prdData = predict_pseudodata(par, data, prdData); % append speudo-data predictions
+
+  % prepare variable st: structure with dependent data values only
+  st = data;
+  [nm, nst] = fieldnmnst_st(st); % nst: number of data sets
+  %  
+  for i = 1:nst   % makes st only with dependent variables
+    fieldsInCells = textscan(nm{i},'%s','Delimiter','.');
+    auxVar = getfield(st, fieldsInCells{1}{:});   % data in field nm{i}
+    k = size(auxVar, 2);
+    if k >= 2
+      st = setfield(st, fieldsInCells{1}{:}, auxVar(:,2));
+    end
+  end  
+  
+  [Y, meanY] = struct2vector(st, nm); % Y: vector with all dependent data
+  W = struct2vector(weights, nm); % W: vector with all weights
+  
+  % loss function as used in petreg_f
+  [P, meanP] = struct2vector(prdData, nm);
+  lf = feval(fileLossfunc, Y, meanY, P, meanP, W);
+
+  % get free settings
+  nm_elas = fieldnames(par); nm_elas(end) = []; n_par = length(nm_elas); 
+  free = zeros(n_par,1); for i=1:n_par; free(i)=par.free.(nm_elas{i}); end
+  nm_elas = nm_elas(free == 1); n_free = length(nm_elas); % names of free parameters
+  
+
+  % perturbations
+  lf_f = zeros(n_free,1); lf_b = lf_f; % initiate foreward and backward perturbed loss functions
+  lf_f2 = zeros(n_free, n_free); lf_b2 = lf_f; % initiate foreward and backward 2nd perturbed loss functions
+  elas_f = lf_f; elas_b = lf_b; % initiate forward and backward elasticities
+  elas2_f = lf_f; elas2_b = lf_b; % initiate forward and backward 2nd order elasticities
+  for i = 1:n_free
+    % foreward
+    par_fi = par; par_fi.(nm_elas{i}) = par.(nm_elas{i}) * (1 + del); % perturb parameter
+    prdData_fi = feval(['predict_', my_pet], par_fi, data, auxData);
+    prdData_fi = predict_pseudodata(par_fi, data, prdData_fi);
+    [P, meanP] = struct2vector(prdData_fi, nm);
+    lf_f(i) = feval(fileLossfunc, Y, meanY, P, meanP, W);
+    elas_f(i) = (lf_f(i)/ lf - 1)/ del;
+    % backward
+    par_bi = par; par_bi.(nm_elas{i}) = par.(nm_elas{i}) * (1 - del); % perturb parameter
+    prdData_bi = feval(['predict_', my_pet], par_bi, data, auxData);
+    prdData_bi = predict_pseudodata(par_bi, data, prdData_bi);
+    [P, meanP] = struct2vector(prdData_bi, nm);
+    lf_b(i) = feval(fileLossfunc, Y, meanY, P, meanP, W);
+    elas_b(i) = (1 - lf_b(i)/ lf)/ del;
+    for j = i:n_free % only upper-triangle
+      % foreward
+      par_fj = par; par_fj.(nm_elas{j}) = par.(nm_elas{j}) * (1 + del); % perturb parameter
+      prdData_fj = feval(['predict_', my_pet], par_fj, data, auxData);
+      prdData_fj = predict_pseudodata(par_fj, data, prdData_fj);
+      [P, meanP] = struct2vector(prdData_fj, nm);
+      lf_f(j) = feval(fileLossfunc, Y, meanY, P, meanP, W);
+      %
+      par_fi2 = par_fi; par_fi2.(nm_elas{j}) = par_fi2.(nm_elas{j}) * (1 + del); % perturb parameter
+      prdData_fi2 = feval(['predict_', my_pet], par_fi2, data, auxData);
+      prdData_fi2 = predict_pseudodata(par_fi2, data, prdData_fi2);
+      [P, meanP] = struct2vector(prdData_fi2, nm);
+      lf_f2(i,j) = feval(fileLossfunc, Y, meanY, P, meanP, W);
+      elas2_f(i,j) = (lf_f2(i,j)/ lf -  lf_f(i)/ lf - lf_f(j)/ lf + 1)/ del^2;
+      % backward
+      par_bj = par; par_bj.(nm_elas{j}) =  par.(nm_elas{j}) * (1 - del); % perturb parameter
+      prdData_bj = feval(['predict_', my_pet], par_bj, data, auxData);
+      prdData_bj = predict_pseudodata(par_bj, data, prdData_bj);
+      [P, meanP] = struct2vector(prdData_bj, nm);
+      lf_b(j) = feval(fileLossfunc, Y, meanY, P, meanP, W);
+      %
+      par_bi2 = par_bi; par_bi2.(nm_elas{j}) =  par_bi2.(nm_elas{j}) * (1 - del); % perturb parameter
+      prdData_bi2 = feval(['predict_', my_pet], par_bi2, data, auxData);
+      prdData_bi2 = predict_pseudodata(par_bi2, data, prdData_bi2);
+      [P, meanP] = struct2vector(prdData_bi2, nm);
+      lf_b2(i,j) = feval(fileLossfunc, Y, meanY, P, meanP, W);
+      elas2_b(i,j) = (lf_b2(i,j)/ lf - lf_b(i)/ lf - lf_b(j)/ lf + 1)/ del^2;
+    end
+  end
+  
+  % ideally, the foreward and backward variants should be the same
+  elas  = (elas_f + elas_b)/2;   % mean of foreward and backward elasticities
+  elas2_f = elas2_f + elas2_f' .* (1-eye(n_free)); % convert upper triangle to symmetric
+  elas2_b = elas2_b + elas2_b' .* (1-eye(n_free)); % convert upper triangle to symmetric
+  elas2 = (elas2_f + elas2_b)/2; % mean of foreward and backward 2nd order elasticities
+
+##### SOURCE END #####
+--></body></html>

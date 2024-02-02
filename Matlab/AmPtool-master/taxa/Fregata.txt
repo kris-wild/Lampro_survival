@@ -1,0 +1,4 @@
+Fregata_aquila
+Fregata_ariel
+Fregata_magnificens
+Fregata_minor

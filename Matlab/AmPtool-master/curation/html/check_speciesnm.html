@@ -1,0 +1,312 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>check_speciesnm</title><meta name="generator" content="MATLAB 9.1"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2021-04-18"><meta name="DC.source" content="check_speciesnm.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>check_speciesnm</h1><!--introduction--><p>Checks species name and lineage</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#3">Syntax</a></li><li><a href="#4">Description</a></li><li><a href="#5">Remarks</a></li><li><a href="#6">Example of use</a></li></ul></div><h2 id="3">Syntax</h2><p><a href="../check_speciesnm.m"><b>check_speciesnm</b></a>(my_pet)</p><h2 id="4">Description</h2><p>Checks common and species name and lineage: family, order, class, phylum by using metaData as assigned by mydata_my_pet.m. If this file is not present locally, it will be copied form the AmP site. Checking gives priority to AmP classification, but mentions deviation for CoL classification.</p><p>Input:</p><div><ul><li>my_pet: character sring with name of entry</li></ul></div><p>Output</p><div><ul><li>flag:</li></ul></div><pre class="language-matlab">0 absent <span class="string">in</span> <span class="string">AmP</span> <span class="string">and</span> <span class="string">in</span> <span class="string">CoL</span> <span class="string">or</span> <span class="string">lineage</span> <span class="string">not</span> <span class="string">complete</span>
+1 present <span class="string">in</span> <span class="string">AmP</span> <span class="string">and</span> <span class="string">family</span>, order, class, phylum <span class="string">are</span> <span class="string">all</span> <span class="string">correct</span>
+2 present <span class="string">in</span> <span class="string">AmP</span>, but <span class="string">family</span>, order, class, phylum <span class="string">are</span> <span class="string">not</span> <span class="string">all</span> <span class="string">correct</span>
+3 absent <span class="string">in</span> <span class="string">AmP</span> <span class="string">but</span> <span class="string">accepted</span> <span class="string">in</span> <span class="string">CoL</span> <span class="string">and</span> <span class="string">family</span>, order, class, phylum <span class="string">are</span> <span class="string">all</span> <span class="string">correct</span>
+4 absent <span class="string">in</span> <span class="string">AmP</span> <span class="string">but</span> <span class="string">accepted</span> <span class="string">in</span> <span class="string">CoL</span>, but <span class="string">family</span>, order, class, phylum <span class="string">are</span> <span class="string">not</span> <span class="string">all</span> <span class="string">correct</span>
+5 absent <span class="string">in</span> <span class="string">AmP</span> <span class="string">but</span> <span class="string">not</span> <span class="string">accepeted</span> <span class="string">in</span> <span class="string">CoL</span>
+</pre><h2 id="5">Remarks</h2><p>Checks with Catalog of Life</p><h2 id="6">Example of use</h2><p>check_speciesnm('Turdus_merula')</p><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2016b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% check_speciesnm
+% Checks species name and lineage 
+
+%%
+function flag = check_speciesnm(my_pet)
+% created 2018/01/23 by Bas Kooijman, modified 2021/04/10
+
+%% Syntax
+% <../check_speciesnm.m *check_speciesnm*>(my_pet)
+
+%% Description
+% Checks common and species name and lineage: family, order, class, phylum by using metaData as assigned by mydata_my_pet.m.
+% If this file is not present locally, it will be copied form the AmP site.
+% Checking gives priority to AmP classification, but mentions deviation for CoL classification.
+%
+% Input:
+%
+% * my_pet: character sring with name of entry 
+%
+% Output
+%
+% * flag: 
+%
+%   0 absent in AmP and in CoL or lineage not complete 
+%   1 present in AmP and family, order, class, phylum are all correct
+%   2 present in AmP, but family, order, class, phylum are not all correct
+%   3 absent in AmP but accepted in CoL and family, order, class, phylum are all correct
+%   4 absent in AmP but accepted in CoL, but family, order, class, phylum are not all correct
+%   5 absent in AmP but not accepeted in CoL
+
+%% Remarks
+% Checks with Catalog of Life 
+
+%% Example of use
+% check_speciesnm('Turdus_merula')
+
+% get metaData
+fnm = ['mydata_', my_pet]; 
+if exist([fnm, '.m'],'file')
+  [~, ~, metaData] = feval(fnm); % run the mydata file
+else
+  path = [set_path2server, 'add_my_pet/entries/', my_pet, '/'];
+  if ismac || isunix
+    info = system(['wget -O mydata_', my_pet, '.m ', path, 'mydata_', my_pet, '.m']);
+  else
+    info = system(['powershell wget -O mydata_', my_pet, '.m ', path, 'mydata_', my_pet, '.m']);
+  end
+  if info == 0
+    [~, ~, metaData] = feval(fnm); % run the mydata file
+    delete([fnm,'.m']);
+  else
+    flag = 0; return
+  end
+end
+
+% check if lineage is complete
+if ~isfield(metaData,'phylum') || isempty(metaData.phylum)
+  fprintf('invalid phylum specification\n');
+  flag = 0; return
+end
+if ~isfield(metaData,'class') || isempty(metaData.class)
+  fprintf('invalid class specification\n'); 
+  flag = 0; return
+end
+if ~isfield(metaData,'order') || isempty(metaData.order)
+  fprintf('invalid order specification\n'); 
+  flag = 0; return
+end
+if ~isfield(metaData,'family') || isempty(metaData.family)
+  fprintf('invalid family specification\n'); 
+  flag = 0; return
+end
+
+load allStat; entries = fieldnames(allStat); nodes = list_taxa;
+
+if ~strcmp(my_pet, metaData.species)
+  fprintf('Name of mydata-file differs from field metaData.species\n');
+  if ~isempty(strfind(metaData.species, ' '))
+    fprintf('The species name in input should not have spaces.\n');
+    fprintf('The standard species name follows the form ''Genus_species''.\n');
+  end
+  flag = 0;
+elseif ismember(my_pet, entries)
+  fprintf([my_pet, ' is already in AmP\n'])
+  flag = 1;
+  if ~strcmp(allStat.(my_pet).family, metaData.family)
+    fprintf(['Family name should be: ', allStat.(my_pet).family, '\n']);
+    flag = 2;
+  end
+  if ~strcmp(allStat.(my_pet).order, metaData.order)
+    fprintf(['Order name should be: ', allStat.(my_pet).order, '\n']);
+    flag = 2;
+  end
+  if ~strcmp(allStat.(my_pet).class, metaData.class)
+    fprintf(['Class name should be: ', allStat.(my_pet).class, '\n']);
+    flag = 2;
+  end
+  if ~strcmp(allStat.(my_pet).phylum, metaData.phylum)
+    fprintf(['Phylum name should be: ', allStat.(my_pet).phylum, '\n']);
+    flag = 2;
+  end
+else
+  fprintf([my_pet, ' is not yet in AmP\n']);
+
+  % check species/lineage info with CoL
+  [lin, rank, id, status] = lineage_CoL(metaData.species); % print warning if species name is not accepted in Catalog of Life
+  if length(lin) == 0
+    flag = 0;
+    return
+  else
+    % check common name
+    species_en = get_common_CoL(id);
+    if ~isfield(metaData,'species_en') || isempty(metaData.species_en)
+      fprintf('No common name specified\n');
+      fprintf('Common names in CoL:\n');
+      species_en
+      flag = 0; 
+    else
+      if ~ismember(metaData.species_en,species_en)
+        fprintf('Common name does not match those in CoL, which is/are:\n');
+        species_en
+      end
+    end
+    
+    % status of name
+    if ~strcmp('accepted name', status)
+      fprintf('name not accepted in CoL\n')
+      flag = 5;
+      return
+    end
+    
+    % check lineage in CoL, but give priority of that in AmP
+    flag = 3;
+    genus = lin{strcmp('Genus', rank)};
+    family = lin{strcmp('Family', rank)};
+    order = lin{strcmp('Order', rank)};
+    class = lin{strcmp('Class', rank)};
+    phylum = lin{strcmp('Phylum', rank)};
+    if ismember(genus, nodes)
+      fprintf(['Genus ', genus, ' is already in AmP\n'])
+      species_AmP = select(genus); species_AmP = species_AmP{1};
+      if ~strcmp(allStat.(species_AmP).family, metaData.family)
+        fprintf(['Family name should be: ', allStat.(species_AmP).family, '\n']);
+        flag = 4;
+      end
+      if ~strcmp(allStat.(species_AmP).order, metaData.order)
+        fprintf(['Order name should be: ', allStat.(species_AmP).order, '\n']);
+        flag = 4;
+      end
+      if ~strcmp(allStat.(species_AmP).class, metaData.class)
+        fprintf(['Class name should be: ', allStat.(my_pet).class, '\n']);
+      end
+      if ~strcmp(allStat.(species_AmP).phylum, metaData.phylum)
+        fprintf(['Phylum name should be: ', allStat.(species_AmP).phylum, '\n']);
+        flag = 4;
+      end
+    elseif ismember(family, nodes)
+      fprintf(['Family ', family, ' is already in AmP\n'])
+      species_AmP = select(family); species_AmP = species_AmP{1};
+      if ~strcmp(family, metaData.family)
+        fprintf(['Family name in CoL: ', family, '\n'])
+      end
+      if ~strcmp(allStat.(species_AmP).order, metaData.order)
+        fprintf(['Order name should be: ', allStat.(species_AmP).order, '\n']);
+        flag = 4;
+      end
+      if ~strcmp(allStat.(species_AmP).class, metaData.class)
+        fprintf(['Class name should be: ', allStat.(my_pet).class, '\n']);
+        flag = 4;
+      end
+      if ~strcmp(allStat.(species_AmP).phylum, metaData.phylum)
+        fprintf(['Phylum name should be: ', allStat.(species_AmP).phylum, '\n']);
+        flag = 4;
+      end
+    elseif ismember(order, nodes)
+      fprintf(['Order ', order, ' is already in AmP\n'])
+      species_AmP = select(order); species_AmP = species_AmP{1};
+      if ~strcmp(family, metaData.family)
+        fprintf(['Family name in CoL: ', family, '\n'])
+        flag = 4;
+      end
+      if ~strcmp(order, metaData.order)
+        fprintf(['Order name in CoL: ', order, '\n'])
+      end
+      if ~strcmp(allStat.(species_AmP).class, metaData.class)
+        fprintf(['Class name should be: ', allStat.(my_pet).class, '\n']);
+        flag = 4;
+     end
+      if ~strcmp(allStat.(species_AmP).phylum, metaData.phylum)
+        fprintf(['Phylum name should be: ', allStat.(species_AmP).phylum, '\n']);
+        flag = 4;
+      end
+    elseif ismember(class, nodes)
+      fprintf(['Class ', class, ' is already in AmP\n'])
+      species_AmP = select(class); species_AmP = species_AmP{1};
+      if ~strcmp(family, metaData.family)
+        fprintf(['Family name in CoL: ', family, '\n'])
+      end
+      if ~strcmp(order, metaData.order)
+        fprintf(['Order name in CoL: ', order, '\n'])
+      end
+      if ~strcmp(class, metaData.class)
+        fprintf(['Class name in CoL: ', class, '\n'])
+      end
+      if ~strcmp(allStat.(species_AmP).phylum, metaData.phylum)
+        fprintf(['Phylum name should be: ', allStat.(species_AmP).phylum, '\n']);
+        flag = 4;
+      end
+    elseif ismember(phylum, nodes)
+      fprintf(['Phylum ', phylum, ' is already in AmP\n'])
+      species_AmP = select(phylum); species_AmP = species_AmP{1};
+      if ~strcmp(family, metaData.family)
+        fprintf(['Family name in CoL: ', family, '\n'])
+        flag = 4;
+      end
+      if ~strcmp(order, metaData.order)
+        fprintf(['Order name in CoL: ', order, '\n'])
+        flag = 4;
+      end
+      if ~strcmp(class, metaData.class)
+        fprintf(['Class name in CoL: ', class, '\n'])
+        flag = 4;
+      end
+      if ~strcmp(allStat.(species_AmP).phylum, metaData.phylum)
+        fprintf(['Phylum name in CoL: ', phylum, '\n'])
+        flag = 4;
+      end
+    end
+  end
+end
+
+
+
+
+##### SOURCE END #####
+--></body></html>

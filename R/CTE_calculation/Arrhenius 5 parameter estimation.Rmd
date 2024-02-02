@@ -1,0 +1,187 @@
+---
+title: "Estimating the 5-parameter Arrhenius response curve using the Schoolfield
+  et al. method"
+author: "Michael Kearney"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    df_print: paged
+    toc: yes
+  pdf_document:
+    toc: yes
+  word_document:
+    toc: yes
+vignette: "%\\VignetteIndexEntry{Single Site Simulation} %\\VignetteEngine{knitr::rmarkdown}
+  %\\VignetteEncoding{UTF-8}\n"
+editor_options:
+  chunk_output_type: console
+---
+
+
+### Overview
+
+The Arrhenius thermal response curve is used to describe rates of biological reactions (another common approach is the Q10 concept). The Arrhenius curve describes an exponential rise in rate with temperature, and has been in use since 1889 (see Glasstone et al. 1941). The formula is
+
+$$\dot{k}(T)=\dot{k_1}e^{({T_A/T_1 - T_A/T)}}$$
+
+The Arrhenius temperature, $T_A$, is the ratio of the activation energy $E_a$ in $J mol^{-1}$ and the gas constant $R$ 8.31441 $J K^{-1} mol^{-1}$ (note how the units cancel so we are left with just temperature, $K$). $T_1$ is the reference temperature, T is the temperature of interest, $\dot{k_1}$ is the reference rate and $\dot{k}$ is the predicted rate at the temperature of interest.
+
+Sharpe and DeMichele (1977) developed a theoretical (enzyme kinetics) model for how the Arrhenius curve drops away at high and low temperature due to enzyme inactivation. The equation is:
+
+$$\dot{k}(T)=\dot{k_1}\frac{e^{\left(T_A/T_1 - T_A/T\right)}}{{1 + e^{(T_{AL}(1 / T - 1 / T_L))} + e^{(T_{AH} (1 / T_H - 1 / T))}}}$$
+
+Schoolfield et al. (1981) then developed a way to estimate the parameters for this equation using nonlinear regression.
+
+DEB theory uses the Sharpe-DeMichele Arrhenius model and requires the estimation of 5 parameters in addition to having a known rate at a reference temperature. There are two different formulations of this response curve - the one used here (and in Schoolfield et al.), shown above, assumes that there has been no enzyme inactivation at the reference temperature. The one used in DEBtool, below, relaxes this assumption.
+
+$$\dot{k}(T)=\dot{k_1}e^{\left(T_A/T_1 - T_A/T\right)}\frac{{1 + e^{(T_{AL} (1 / T_1 - 1 / T_L))} + e^{(T_{AH} (1 / T_H - 1 / T_1))}}}{{1 + e^{(T_{AL} (1 / T - 1 / T_L))} + e^{(T_{AH} (1 / T_H - 1 / T))}}}$$
+
+It is possible to estimate the parameters for these functions as part of the AmP method (Lika et al., 2011; Marques et al. 2018). However, an alternative approach is to estimate them outside of the AmP procedure as a first step, using the method below, and then provide them to the AmP procedure as givens. This latter method can be particularly useful when you need to work out 'constant temperature equivalents' for rate data collected under time-varying temperatures, as described [here](http://www.debtheory.org/wiki/index.php?title=Get_environmentaltemperatures).
+
+This document uses the data in original Schoolfield et al. paper (also shown in Fig. 1.8 of Kooijman 2010) and their technique for obtaining the initial estimates of the parameters, which can then be fine-tuned with the 'nlsLM' function of the minpack.lm package in R. This function uses the Levenberg-Marquardt algorithm, which is efficient but has a small domain of attraction, hence the importance of obtaining good starting values.
+
+```{r, eval=FALSE}
+install.packages('minpack.lm')
+```
+
+### The input data
+
+Below are the raw rates and temperatures from the dataset in Schoolfield et. al (1981) on the population
+growth rate of *Escherichia coli* (obtained via [DataThief](https://datathief.org/)). For fitting the model, we need to log-transform (natural) the rates and convert the temperatures from centigrade to Kelvin and take their inverse.
+
+```{r}
+rate <- c(0.2397, 0.5726, 0.5779, 0.5934, 0.3580, 0.2516, 0.2115, 0.1231, 0.0416, 0.0151)
+temp <- c(44.56247, 42.31736, 39.11580, 36.92752, 29.64174, 25.41985, 21.67001, 19.05115, 13.76111, 10.37708)
+schoolfield <- as.data.frame(cbind(rate, temp))
+
+plot(schoolfield$rate ~ schoolfield$temp, ylim = c(0,0.7), ylab = 'growth rate (1/h)', xlab = 'temperature (°C)')
+
+schoolfield$tempK <- schoolfield$temp + 273.15
+schoolfield$invK <- 1 / schoolfield$tempK
+schoolfield$lnrate <- log(schoolfield$rate)
+
+plot(schoolfield$lnrate ~ schoolfield$invK, ylab = 'ln[growth rate (h-1)]', xlab = '1/K', cex.lab = 1.5, cex.axis = 1.5, cex = 1.5)
+```
+
+### The 5-parameter Arrhenius function
+
+Now we define the function for the 5-parameter Arrhenius response. The commented-out function is the second version described in the overview, which doesn't assume that the reference rate is for a part of the curve where enzyme inactivation has occured.
+
+```{r}
+ArrFunc5 <- function(x, T_A, T_AL, T_AH, T_L, T_H, T_REF, kdot_ref){
+  exp(T_A * (1 / T_REF - 1 / x)) / (1 + exp(T_AL * (1 / x - 1 / T_L)) + exp(T_AH * (1 / T_H - 1 / x))) * kdot_ref
+  #exp(T_A / T_REF - T_A / x) * ((1 + exp(T_AL / T_REF - T_AL / T_L) + exp(T_AH / T_H - T_AH / T_REF)) / (1 + exp(T_AL / x - T_AL / T_L) + exp(T_AH / T_H - T_AH / x))) * kdot_ref
+}
+
+T_REF <- 25 + 273.15
+kdot_ref <- 0.2516
+```
+
+### Initial estimates of slopes and intercepts for $T_A$, $T_{AL}$ and $T_{AH}$
+
+Next, we obtain initial estimates of the Arrhenius temperatures $T_A$, $T_{AL}$ and $T_{AH}$, which represent, respectively, the rate parameters for the middle, exponential part of the curve (when there is no enzyme inactivation), the lower part where cold is deactivating enzymes, and the upper part of the curve where heat is starting to denature enzymes. We simply fit a linear model to get the slope and intercept for the response at each of these parts of the curve, specifying the temperature ranges where the transitions occur (you work these out by eye).
+
+```{r}
+subdata = subset(schoolfield, temp > 19 & temp < 42)
+estT_A <- coef(summary(lm(lnrate ~ invK, data = subdata)))
+T_A_int <- estT_A[1]
+T_A_slp <- estT_A[2]
+
+subdata = subset(schoolfield, temp < 19)
+estT_AL <- coef(summary(lm(lnrate ~ invK, data = subdata)))
+T_AL_int <- estT_AL[1]
+T_AL_slp <- estT_AL[2]
+
+subdata = subset(schoolfield, temp > 42)
+estT_AH <- coef(summary(lm(lnrate ~ invK, data = subdata)))
+T_AH_int <- estT_AH[1]
+T_AH_slp <- estT_AH[2]
+```
+
+From these we can also work out an initial estimate of $T_L$ and $T_H$, which are the temperatures at which we get a halving of enzyme activity due to cold and heat, respectively.
+
+```{r}
+# initial estimate of T_L and T_H
+estT_L <- 1/((log(exp(T_A_int)/2) - T_AL_int)/ (T_AL_slp - T_A_slp))
+estT_H <- 1/((log(exp(T_A_int)/2) - T_AH_int)/ (T_AH_slp - T_A_slp))
+```
+
+Now we can plot these estimates on the original curves. The red, black and blue straight lines are based on the estimated $T_{AL}$, $T_A$ and $T_{AH}$ values, the dotted straight line is based on half of the intercept for the $T_A$ slope function (from which $T_L$ and $T_H$ are determined - i.e. when the rate has dropped by half), and the black curved line is the current predicted curve from our initial parameter estimates.
+
+```{r}
+# plot the data and the estimated lines
+plot(schoolfield$invK, schoolfield$lnrate, ylab = 'ln[growth rate (h-1)]', xlab = '1/K', cex.lab = 1.5, cex.axis = 1.5, cex = 1.5)
+abline(T_A_int, T_A_slp)
+abline(T_AL_int, T_AL_slp, col = 'blue')
+abline(T_AH_int, T_AH_slp, col = 'red')
+abline(log(exp(T_A_int)/2), T_A_slp, lty = 2)
+
+# get parameters, with correct slope sign for the equation being used
+T_A <- T_A_slp*-1
+T_L <- estT_L
+T_H <- estT_H
+T_AL <- T_AL_slp*-1
+T_AH <- T_AH_slp
+
+# plot current estimated curve
+Tbs <- seq(0,50)+273.15
+TempCorr <- ArrFunc5(Tbs, T_A, T_AL, T_AH, T_L, T_H, T_REF, kdot_ref) 
+points(1/Tbs,log(TempCorr), type = 'l', lwd = 2)
+```
+
+If we now plot the untransformed rate response curve with these inital parameter estimates we get this:
+
+```{r}
+plot(schoolfield$rate ~ schoolfield$temp, ylab = "growth rate (h-1)", xlab = expression(paste("temperature (",degree,"C)")), cex.lab = 1.5, cex.axis = 1.5, cex = 1.5, ylim = c(0, 0.7))
+points(Tbs - 273.15, TempCorr, type = 'l')
+```
+
+### Use nlsLM to fine tune the parameters
+
+So far we have a moderately good fit of the curve to the data, but now we use the nonlinear estimation procedure to improve it.
+
+```{r}
+library(minpack.lm)
+# fit to data
+y = c(schoolfield$rate)
+x = c(schoolfield$tempK)
+par <- list(T_A = T_A, T_AL = T_AL, T_AH = T_AH, T_L = T_L, T_H = T_H, kdot_ref = kdot_ref)
+fit <- nlsLM(start = par, lower=NULL, upper=NULL, formula = y ~ exp(T_A * (1 / T_REF - 1 / x)) / (1 + exp(T_AL * (1 / x - 1 / T_L)) + exp(T_AH * (1 / T_H - 1 / x))) * kdot_ref, weights = 1 / y, algorithm = "LM")
+
+# retrieve the estimated coefficients
+coeffs<-coef(fit)
+T_A = coeffs[1] # Arrhenius temperture
+T_AL = coeffs[2] # Arrhenius temperature at lower temperature threshold
+T_AH = coeffs[3] # Arrhenius temperature at upper temperature threshold
+T_L = coeffs[4] # lower temperature threshold
+T_H = coeffs[5] # upper temperature threshold 
+kdot_ref = coeffs[6] # upper temperature threshold 
+arrhenius <- c(T_A, T_AL, T_AH, T_L, T_H)
+
+# plot the result
+plot(schoolfield$invK, schoolfield$lnrate, ylab = 'ln[growth rate (h-1)]', xlab = '1/K')
+abline(T_A_int, T_A_slp)
+abline(T_AL_int, T_AL_slp, col = 'blue')
+abline(T_AH_int, T_AH_slp, col = 'red')
+abline(log(exp(T_A_int)/2), T_A_slp, lty = 2)
+TempCorr <- ArrFunc5(Tbs, T_A, T_AL, T_AH, T_L, T_H, T_REF, kdot_ref) 
+points(1/Tbs,log(TempCorr), type = 'l', lty = 1, lwd = 2)
+
+plot(schoolfield$temp, schoolfield$rate, ylab = "growth rate (h-1)", xlab = expression(paste("temperature (",degree,"C)")), cex.lab = 1.5, cex.axis = 1.5, cex = 1.5, ylim = c(0, 0.7))
+points(Tbs-273.15,TempCorr, type = 'l')
+```
+
+### References
+
+Glasstone, S., K. J. Laidler, and H. Eyring. 1941. The Theory of Rate Processes. McGraw-Hill, London.
+
+Kooijman, S. A. L. M. 2010. Dynamic Energy Budget Theory for Metabolic Organisation. Cambridge University Press, Great Britain.
+
+Lika, K., M. R. Kearney, V. Freitas, H. W. van der Veer, J. van der Meer, J. W. M. Wijsman, L. Pecquerie, and S. A. L. M. Kooijman. 2011. The “covariation method” for estimating the parameters of the standard Dynamic Energy Budget model I: Philosophy and approach. Journal of Sea Research 66:270–277.
+
+Marques, G. M., S. Augustine, K. Lika, L. Pecquerie, T. Domingos, and S. A. L. M. Kooijman. 2018. The AmP project: Comparing species on the basis of dynamic energy budget parameters. PLOS Computational Biology 14:e1006100.
+
+Schoolfield, R. M., P. J. H. Sharpe, and C. E. Magnuson. 1981. Non-linear regression of biological temperature-dependent rate models based on absolute reaction-rate theory. Journal of Theoretical Biology 88:719–731.
+
+Sharpe, P. J. H., and D. W. DeMichele. 1977. Reaction kinetics of poikilotherm development. Journal of Theoretical Biology 64:649–670.
+

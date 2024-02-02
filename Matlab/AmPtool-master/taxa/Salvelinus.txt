@@ -1,0 +1,7 @@
+Salvelinus_alpinus
+Salvelinus_curilus
+Salvelinus_fontinalis
+Salvelinus_leucomaenis
+Salvelinus_malma
+Salvelinus_namaycush
+Salvelinus_willoughbii

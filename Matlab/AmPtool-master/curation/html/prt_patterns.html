@@ -1,0 +1,229 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>prt_patterns</title><meta name="generator" content="MATLAB 9.10"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2022-06-06"><meta name="DC.source" content="prt_patterns.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>prt_patterns</h1><!--introduction--><p>generates  plots for patterns for display on patterns.html</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#2">created 2016/12/31 by Bas Kooijman</a></li><li><a href="#3">Syntax</a></li><li><a href="#4">Description</a></li><li><a href="#5">Remarks</a></li></ul></div><h2 id="2">created 2016/12/31 by Bas Kooijman</h2><p>modified 2021/02/20</p><h2 id="3">Syntax</h2><p><a href="../prt_patterns"><b>prt_patterns</b></a></p><h2 id="4">Description</h2><p>generates plots for patterns for display on patterns.html</p><p>Input:</p><div><ul><li>index: optional vector with patterns numbers (default 1:8)</li></ul></div><p>Output:</p><div><ul><li>png-files written in ../../deblab/add_my_pet/img/patterns/</li></ul></div><h2 id="5">Remarks</h2><div><ul><li>All figures are closed automatically if input is not specified.</li><li>For presentation on the web, copy png files to /home/websites/www.bio.vu.nl/webroot/thb/deb/deblab/add_my_pet/img/patterns</li><li>Display in entries_admin/patterns.html</li></ul></div><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2021a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% prt_patterns
+% generates  plots for patterns for display on patterns.html
+
+%%
+function prt_patterns(index)
+%% created 2016/12/31 by Bas Kooijman
+% modified 2021/02/20
+
+%% Syntax
+% <../prt_patterns *prt_patterns*>
+
+%% Description
+% generates plots for patterns for display on patterns.html
+%
+% Input:
+%
+% * index: optional vector with patterns numbers (default 1:8)
+%
+% Output: 
+%
+% * png-files written in ../../deblab/add_my_pet/img/patterns/
+
+%% Remarks
+% * All figures are closed automatically if input is not specified. 
+% * For presentation on the web, copy png files to 
+% /home/websites/www.bio.vu.nl/webroot/thb/deb/deblab/add_my_pet/img/patterns
+% * Display in entries_admin/patterns.html
+
+path = '../../deblab/add_my_pet/img/patterns/';
+
+close all
+
+if exist('index','var')
+  i_close = false;
+else
+  index = 1:8; i_close = true;
+end
+n = length(index);  
+
+for i = 1:n
+  switch index(i)
+
+    case 1 % Fig 1: log W - log dW
+      shstat_options('default');
+      shstat_options('x_label', 'on');
+      shstat_options('y_label', 'on');
+      cWdW = read_allStat('c_T', 'W_dWm', 'dWm'); c_T = cWdW(:,1); W = cWdW(:,2); dW = cWdW(:,3);
+      [Hfig Hleg] = shstat([W, dW ./ c_T], legend_sauria, datestr(datenum(date),'yyyy/mm/dd')); 
+      set(gca, 'FontSize', 15, 'Box', 'on')
+
+      figure(Hfig) 
+      xlabel('_{10}log weight at max growth, g')      
+      ylabel('_{10}log max growth, g/d')
+
+      saveas(Hfig, [path, 'W_dW.png'])
+      saveas(Hleg, [path, 'legend_W_dW.png'])
+
+    case 2 % Fig 2: log W-log J_O
+      shstat_options('default');
+      shstat_options('x_label', 'on');
+      shstat_options('y_label', 'on');
+      cWJO = read_allStat('c_T', 'Ww_i', 'J_Oi'); c_T = cWJO(:,1); W = cWJO(:,2); JO = cWJO(:,3);
+      [Hfig Hleg] = shstat([W, JO ./ c_T], legend_RSED, datestr(datenum(date),'yyyy/mm/dd')); 
+      set(gca, 'FontSize', 15, 'Box', 'on')
+
+      figure(Hfig) 
+      xlabel('_{10}log max adult weight, g')      
+      ylabel('_{10}log O_2 consumption, mol/d')
+
+      saveas(Hfig, [path, 'W_JO.png'])
+      saveas(Hleg, [path, 'legend_W_JO.png'])
+
+    case 3 % Fig 3: log V_m - log [E_m]
+      shstat_options('default');
+      [Hfig, Hleg] = shstat({'p_Am', 'E_m'}, legend_RSED, datestr(datenum(date),'yyyy/mm/dd')); 
+    
+      figure(Hfig) % add labels to figure, because this is not done by shstat in numerical mode
+      xlabel('_{10}log spec assimilation, \{p_{Am}\}, J/d.cm^2')      
+      ylabel('_{10}log max reserve capacity, [E_m], J/cm^3')
+
+      saveas(Hfig, [path, 'pAm_Em.png'])
+      saveas(Hleg, [path, 'legend_pAm_Em.png'])
+
+    case 4 % Fig 4: log V_m - log [p_M] ([p_M] is given at T_ref)
+      shstat_options('default');
+      LipM = read_allStat('L_i', 'p_M'); L_i = LipM(:,1); p_M = LipM(:,2); 
+      [Hfig, Hleg] = shstat([L_i.^3, p_M], legend_RSED, datestr(datenum(date),'yyyy/mm/dd')); 
+    
+      figure(Hfig) % add labels to figure, because this is not done by shstat in numerical mode
+      xlabel('_{10}log ultimate structural volume, cm^3')      
+      ylabel('_{10}log spec som maint, J/d.cm^3')
+
+      saveas(Hfig, [path, 'V_pM.png'])
+      saveas(Hleg, [path, 'legend_V_pM.png'])
+
+    case 5 % Fig 5: low p_M- log RW
+      shstat_options('default');
+      WWRpMcT = read_allStat('Wd_b', 'Wd_i', 'R_i', 'p_M', 'c_T'); Wd_b = WWRpMcT(:,1); Wd_i = WWRpMcT(:,2); R_i = WWRpMcT(:,3); p_M = WWRpMcT(:,4); c_T = WWRpMcT(:,5);
+      [Hfig Hleg] = shstat([p_M, Wd_b ./Wd_i .* R_i ./ c_T], legend_RSED, datestr(datenum(date),'yyyy/mm/dd')); 
+
+      figure(Hfig) 
+      xlabel('_{10}log spec som maintenance, J/d.cm^3')      
+      ylabel('_{10}log max reprod rate \times W_d^b/ W_d^\infty, 1/d')
+
+      saveas(Hfig, [path, 'pM_RW.png'])
+      saveas(Hleg, [path, 'legend_pM_RW.png'])
+
+    case 6 % Fig 6: log p_M - log dW/W
+      shstat_options('default');
+      WdWpMcT = read_allStat('W_dWm', 'dWm', 'p_M', 'c_T'); W_dWm = WdWpMcT(:,1); dWm = WdWpMcT(:,2); p_M = WdWpMcT(:,3); c_T = WdWpMcT(:,4);
+      [Hfig Hleg] = shstat([p_M, dWm ./ W_dWm ./ c_T], legend_RSED, datestr(datenum(date),'yyyy/mm/dd')); 
+
+      figure(Hfig) 
+      xlabel('_{10}log spec som maintenance, J/d.cm^3')      
+      ylabel('_{10}log spec max growth rate, 1/d')
+
+      saveas(Hfig, [path, 'pM_dWW.png'])
+      saveas(Hleg, [path, 'legend_pM_dWW.png'])
+
+    case 7 % Fig 7: log ss - kap
+      shstat_options('default');
+      shstat_options('y_transform', 'none');
+      shstat_options('x_label', 'on');
+      shstat_options('y_label', 'on');
+      [Hfig Hleg] = shstat({'s_s', 'kap'}, legend_RSED, datestr(datenum(date),'yyyy/mm/dd')); 
+      set(gca, 'FontSize', 15, 'Box', 'on')
+
+      figure(Hfig) % add items to figure
+      kap = linspace(1e-6,1,100); ss = kap.^2 .* (1 - kap); 
+      plot(log10(ss), kap, 'k', 'Linewidth', 2)
+      ylim([0 1]);
+      saveas(Hfig, [path, 'log_ss_kap.png'])
+      saveas(Hleg, [path, 'legend_log_ss_kap.png'])
+
+    case 8 % Fig 8: ss - kap
+      shstat_options('x_transform', 'none');
+      shstat_options('y_transform', 'none');
+      shstat_options('x_label', 'on');
+      shstat_options('y_label', 'on');
+      [Hfig Hleg] = shstat({'s_s', 'kap'}, legend_vert, datestr(datenum(date),'yyyy/mm/dd')); 
+      set(gca, 'FontSize', 15, 'Box', 'on')
+
+      figure(Hfig) % add items to figure
+      kap = linspace(0, 1, 100); ss = kap.^2 .* (1 - kap); 
+      plot(ss, kap, 'k', 'Linewidth', 2)
+      xlim([0 4/27]); ylim([0 1]);
+      saveas(Hfig, [path, 'ss_kap.png'])
+      Hleg = shlegend(legend_vert, [], [0.9 0.25]); % reduce height of legend
+      saveas(Hleg, [path, 'legend_ss_kap.png'])
+  end
+end
+
+if i_close
+  close all
+end
+
+##### SOURCE END #####
+--></body></html>

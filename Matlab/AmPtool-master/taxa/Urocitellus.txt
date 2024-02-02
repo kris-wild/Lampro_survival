@@ -1,0 +1,6 @@
+Urocitellus_armatus
+Urocitellus_beldingi
+Urocitellus_columbianus
+Urocitellus_elegans
+Urocitellus_mollis
+Urocitellus_richardsonii
