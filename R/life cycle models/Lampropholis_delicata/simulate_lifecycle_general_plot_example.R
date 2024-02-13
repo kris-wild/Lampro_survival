@@ -139,7 +139,7 @@ stage <- 0
 # reproduction parameters
 viviparous <- 0 # live bearing (1) or egg laying (0)
 clutchsize <- 4 # how many eggs per clutch? 
-#clutch_ab <- c(0.21354, -4.39046) # regression results from shine paper - in raw_data folder "SVL_Clutchsize.csv" 
+clutch_ab <- c(0.21354, -4.39046) # regression results from shine paper - in raw_data folder "SVL_Clutchsize.csv" 
 photostart <- 3 
 photofinish <- 2 
 batch <- 1
