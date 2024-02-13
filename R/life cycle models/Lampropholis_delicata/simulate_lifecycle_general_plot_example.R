@@ -15,13 +15,13 @@ source(paste0('R/life cycle models/', species1,
               '/run.DEB.sim.R'))
 
 # micro and ecto mods
-micro <- readRDS('output/microclimates/micro_Syd_2016_2021.Rda')
-ecto <- readRDS('output/life cycle models/ecto_nichemapR_micro_Syd_2016_2021.Rda')
+micro <- readRDS('output/microclimates/micro_Bris_2016_2021.Rda')
+ecto <- readRDS('output/life cycle models/ecto_nichemapR_micro_Bris_2016_2021.Rda')
 
 
 # region info - change 
-region ="Sydney, NSW (Long:151.10 Lat: -33.77)" # 
-#region = "Brisbane, QLD (Long:153.02 Lat: -27.469)"
+#region ="Sydney, NSW (Long:151.10 Lat: -33.77)" # 
+region = "Brisbane, QLD (Long:153.02 Lat: -27.469)"
 #region ="Christchurch, NZ (Long:172.6306, Lat: - 43.5320)"
 #region = "Auckland, NZ (Long:174.7645, Lat -36.8509)"
 #region = "Honolulu, HI (Long -157.85 lat 21.3"
@@ -139,13 +139,10 @@ stage <- 0
 # reproduction parameters
 viviparous <- 0 # live bearing (1) or egg laying (0)
 clutchsize <- 4 # how many eggs per clutch? 
-clutch_ab <- c(0.21354, -4.39046) # regression results from shine paper - in raw_data folder "SVL_Clutchsize.csv" 
+#clutch_ab <- c(0.21354, -4.39046) # regression results from shine paper - in raw_data folder "SVL_Clutchsize.csv" 
 photostart <- 3 
 photofinish <- 2 
 batch <- 1
-clutchsize = 6
-minclutch = 3
-maxclutch = 8
 
 # overwrite nitrogenous waste indices with those of uric acid (currently ammonia by default)
 n.NC <- 1

@@ -15,8 +15,9 @@ run.DEB.sim <- function(datelay, nyears){
   
   minshades <- matrix(rep(0, length(start2:finish2)))
   maxshades <- matrix(rep(90, length(start2:finish2)))
+  startday = 1
   
-# Ecotherm mod  
+  # Ecotherm mod  
   ecto <- ectotherm(write_input = 0,
                     nyears = nyears,
                     write_csv = 0,
@@ -36,7 +37,7 @@ run.DEB.sim <- function(datelay, nyears){
                     DEB = rundeb,
                     intmethod = 1,
                     clutchsize = clutchsize,
-                    clutch_ab = clutch_ab,
+                    #clutch_ab = clutch_ab,
                     #minclutch = minclutch,
                     #maxclutch = maxclutch,
                     shape = shape,
@@ -126,4 +127,3 @@ run.DEB.sim <- function(datelay, nyears){
                     daylengthfinish = 13.44)
   return(list(ecto = ecto, start = start, finish = finish))
 }
-

@@ -1,6 +1,6 @@
 library(NicheMapR)
 library(mcera5)
-loc <- c(-157.85, 21.30)
+loc <- c(151.10, -33.77)
 # SYD c(151.10, -33.77)
 # Brisb c(174.7645, -36.8509) 
 # NZ c(172.6306, - 43.5320)
@@ -15,8 +15,8 @@ ERR <- 1.5 # model error tolerance
 minshade <- 0 # minimum shade
 maxshade <-25 # maximum shade
 Usrhyt <- 0.005 # lizard height above ground
-#spatial = "/Volumes/The Brain/ERA5/Australia_ERA5/"
-spatial = 'Data/ERA_5/Hawaii/ERA5'
+spatial = "Data/ERA_5/Australia/ERA5"
+#spatial = 'Data/ERA_5/Hawaii/ERA5'
 
 micro <- micro_era5(windfac = 1, RUF = 0.004, 
                     minshade = minshade, maxshade = maxshade, 
