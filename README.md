@@ -17,4 +17,21 @@ Lat, Long, ClimateScenerio, Egg mass, Egg temp/ Nest Temp, P surv (egg), sd(P su
 ## Ultimate data
 Lat, Long, ClimateScenerio, Egg mass, Egg temp/ Nest Temp, P surv (egg), sd(P surv), L95% (p-surv), U95% (p-surv)
 
+##### In silico DEB experiment
 
+1) Run ecotherm model, z constant and same as we have now, at two constant temps, 23 and 28C.
+	- What is the body size at "hatch"/maturity?
+	- What is the hatching time?
+
+2) Run ecotherm model, z constant but Eo very low and high at two constant temps, 23 and 28C.
+	- What is the MINIMUM Eo for development? Here you probably want to add in systematic variation to Eo (Eo varies from 100, 400, 600 you get idea.)
+	- What is the body size at "hatch"/maturity?
+	- What is the hatching time?
+
+3) Run ecotherm model, z with rnorm(0,0.01) and same as we have now, at two constant temps, 23 and 28C.
+	- What is the distribution of body size at "hatch"/maturity?
+	- What is the distribution hatching time?
+
+4) Run ecotherm model, z with rnorm(0,0.01) and same as we have now, at two constant temps, 23 and 28C with 15% less energy in Eo.
+	- What is the distribution of body size at "hatch"/maturity?
+	- What is the distribution hatching time?
