@@ -254,10 +254,11 @@ regional_simulation_egg <- function(longitude, latitude,
 
 
 
-#########################
-##############################  MICRO --->  ECTOTHERM ---> LIFE HISTORY MODEL
-######## 
-####################################
+##############################  
+######## DEB insilico experiment functions
+######## Question 1) Run ecotherm model, z constant and same as we have now, 
+########  at two constant temps, 23 and 28C.
+##############################  
 deb_experiment <- function(micro = micro, species = species) {
   micro <<-micro
   function_1 <- function(micro = micro, species = species) {

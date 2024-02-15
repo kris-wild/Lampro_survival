@@ -71,7 +71,7 @@ run.DEB.sim <- function(datelay, nyears){
                     v = v / 24,
                     kap = kap,
                     p_M = p.M / 24,
-                    E_G = E.G,
+                    E_G = E.G*1.1,
                     kap_R = kap.R,
                     k_J = k.J / 24,
                     E_Hb = E.Hb,
