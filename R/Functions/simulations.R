@@ -254,13 +254,20 @@ regional_simulation_egg <- function(longitude, latitude,
 
 
 
-##############################  
-######## DEB insilico experiment functions
-######## Question 1) Run ecotherm model, z constant and same as we have now, 
-########  at two constant temps, 23 and 28C.
-##############################  
-deb_experiment <- function(micro = micro, species = species) {
+#########################
+##############################  MICRO --->  ECTOTHERM ---> LIFE HISTORY MODEL
+######## 
+####################################
+deb_experiment <- function(micro = micro, species = species,
+                           E.G_mult = 1, # structural costs multiplier
+                           E.0_mult = 1,# energy content of the egg multiplier
+                           z_mult = 1) # DEB scaling factor 
+  {
   micro <<-micro
+  E.G_mult <<- E.G_mult
+  E.0_mult <<- E.0_mult
+  z_mult <<- z_mult
+  
   function_1 <- function(micro = micro, species = species) {
     source(paste0('R/life cycle models/', species, '/parameters_biophys.R'))
    
@@ -295,7 +302,8 @@ deb_experiment <- function(micro = micro, species = species) {
     return(list(micro = micro, ecto = ecto))
   }
   
-  function_2 <- function(micro, ecto) {
+  function_2 <- function(micro, ecto, E.G_mult = E.G_mult, 
+                         E.0_mult = E.0_mult, z_mult = z_mult) {
     #############  #############  #############  #############
     ############# DEB MODEL FOR ADULT ANIMAL at gps location
     #############  #############  #############  #############
@@ -320,6 +328,12 @@ deb_experiment <- function(micro = micro, species = species) {
     ######## Matlab output
     # assign possible missing parameters
     source(paste0('R/life cycle models/', species, '/parameters_matlab_silico_DEB.R'))
+    
+    
+    ######## energy mulipliers for function: 
+    E.G <<- E.G*E.G_mult
+    E.0 <<- E.0*E.0_mult
+    z_mult <<- z.mult*z_mult
     
     ############################
     # Simulation start
@@ -353,9 +367,15 @@ deb_experiment <- function(micro = micro, species = species) {
   results_1 <- function_1(micro = micro, species = species)
   micro <- results_1$micro
   ecto <- results_1$ecto
-  
+  E.G_mult <<- E.G_mult
+  E.0_mult <<- E.0_mult
+  z_mult <<- z_mult
+
   # Calling function_2 with the outputs of function_1
-  results_2 <<- function_2(micro= micro, ecto = ecto)
+  results_2 <<- function_2(micro= micro, ecto = ecto,
+                           E.G_mult = E.G_mult, 
+                           E.0_mult = E.0_mult,
+                           z_mult = z_mult)
   
   return(results_2)
   

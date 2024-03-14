@@ -14,8 +14,8 @@ if(exists("T.REF")==FALSE){T_REF <- T.REF <- 20 + 273.15}else{T_REF <- T.REF}
 
 
 ######## Grab these from MATLAB OUTPUT
-E.0 <- 1145
 L.b <- 0.4213
+E.0 <- 1145
 
 # assign possible missing parameters
 if(exists("E.Hj")==FALSE){E.Hj <- E.Hb}

@@ -32,7 +32,7 @@ par.del_M = 0.23644;  free.del_M = 1;   units.del_M = '-';        label.del_M = 
 par.f = 1;            free.f     = 0;   units.f = '-';            label.f = 'scaled functional response for 0-var data'; 
 
 %% set chemical parameters from Kooy2010 
-[par, units, label, free] = addchem(par, units, label, free, metaData.phylum, metaData.class); 
+[par, units, label, free] = addchem(par, units, label, free, metaData.phylum, metaData.class);
 
 %% Pack output: 
 txtPar.units = units; txtPar.label = label; par.free = free; 
