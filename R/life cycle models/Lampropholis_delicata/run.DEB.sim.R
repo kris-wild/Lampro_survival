@@ -71,8 +71,8 @@ run.DEB.sim <- function(datelay, nyears){
                     v = v / 24,
                     kap = kap,
                     p_M = p.M / 24,
-                    E_G = E.G, # change these for temp sims
-                    E_0 = E.0,# change these for temp sims
+                    E_G = E.G,
+                    E_0 = E.0*z.mult^4, 
                     kap_R = kap.R,
                     k_J = k.J / 24,
                     E_Hb = E.Hb * z_mult^3,

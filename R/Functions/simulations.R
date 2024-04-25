@@ -3,6 +3,143 @@ library(R.matlab)
 library(lubridate)
 library(dplyr)
 library(scales)
+######################### DEB in-silico experiment
+######## This function is used for the DEB 'in silico experiments'
+######## here you can alter the following as 'multipliers'
+######## EG - structural costs, 
+######## EO - energy content
+######## z_mult - zoom scaling coefficent
+######## you are able to manipulate these to capture the temperature size rule & 
+######## to see how changing the energy content of the egg effects body mass of hatching
+######## ** Note zoom factor only changes E.0 in "run.DEB.sim.R" file
+####################################
+deb_experiment <- function(micro = micro, species = species,
+                           E.G_mult = 1, # structural costs multiplier
+                           E.0_mult = 1,# energy content of the egg multiplier
+                           z_mult = 1) # DEB scaling factor 
+  {
+  micro <<-micro
+  E.G_mult <<- E.G_mult
+  E.0_mult <<- E.0_mult
+  z_mult <<- z_mult
+  
+  function_1 <- function(micro = micro, species = species) {
+    source(paste0('R/life cycle models/', species, '/parameters_biophys.R'))
+   
+    
+    
+    #############  #############  #############
+    ############# ECTOTHERM MODEL FOR ADULT ANIMAL
+    #############  #############  #############
+    # run ecotherm model 
+    ecto <- ectotherm(Ww_g = Ww_g,
+                      shape = shape,
+                      CT_min = CT_min, 
+                      T_RB_min = T_RB_min,
+                      T_B_min = T_B_min,
+                      T_F_min = T_F_min,
+                      T_pref = T_pref,
+                      T_F_max = T_F_max,
+                      CT_max = CT_max,
+                      alpha_max = alpha_max,
+                      alpha_min = alpha_min,
+                      diurn = diurn,
+                      nocturn = nocturn,
+                      shade_seek = shade_seek,
+                      burrow = burrow,
+                      climb = climb,
+                      shdburrow = shdburrow,
+                      mindepth = mindepth,
+                      maxdepth = maxdepth,
+                      pct_wet = pct_wet,
+                      pct_eyes = pct_eyes)
+    ecto <<- ecto
+    return(list(micro = micro, ecto = ecto))
+  }
+  
+  function_2 <- function(micro, ecto, E.G_mult = E.G_mult, 
+                         E.0_mult = E.0_mult, z_mult = z_mult) {
+    #############  #############  #############  #############
+    ############# DEB MODEL FOR ADULT ANIMAL at gps location
+    #############  #############  #############  #############
+    # deb simulation function
+    source(paste0('R/life cycle models/', species, '/run.DEB.sim.R'))
+    # micro file and dates
+    micro_orig <- micro
+    dates <- micro$dates
+    dates2 <- micro$dates2
+    soil <- as.data.frame(micro$soil)
+    metout <- as.data.frame(micro$metout)
+    humid <- as.data.frame(micro$humid)
+    rainfall <- micro$RAINFALL
+    soilpot <- as.data.frame(cbind(dates,as.data.frame(micro$soilpot)))
+    metout <- as.data.frame(cbind(dates,as.data.frame(micro$metout))) # above ground microclimatic conditions, min shade
+    soil <- as.data.frame(cbind(dates,as.data.frame(micro$soil))) # soil temperatures, minimum shade
+    soilmoist <- as.data.frame(cbind(dates,as.data.frame(micro$soilmoist))) # soil moisture, minimum shade
+    humid <- as.data.frame(cbind(dates,as.data.frame(micro$humid))) # soil humidity, minimum shade
+    environ <- as.data.frame(ecto$environ)
+    
+    
+    ######## Matlab output
+    # assign possible missing parameters
+    source(paste0('R/life cycle models/', species, '/parameters_matlab_silico_DEB.R'))
+    
+    
+    ######## energy mulipliers for function: 
+    E.G <<- E.G*E.G_mult
+    E.0 <<- E.0*E.0_mult
+    z_mult <<- z_mult
+    
+    ############################
+    # Simulation start
+    startday <- 1
+    ystart <- 2016
+    for(ystart in 2016:2016){
+      datelay <- as.POSIXct(paste0("1/12/", ystart), format = "%d/%m/%Y")
+      simout <- run.DEB.sim(datelay, 1) # run simulation for how many years?
+      
+      # retrieve outputs
+      ecto <- simout$ecto
+      debout<-as.data.frame(ecto$debout) # DEB model outputs
+      # arranging dates 
+      dates <- micro_orig$dates
+      dates <- dates[simout$start:simout$finish]
+      debout$dates <- dates # add dates
+      
+      ##### adding wet mass with dessication
+      desiccation <- (1 - debout$PCT_DESIC / 100)
+      debout$Wet_mass_g <- debout$WETMASS*desiccation 
+      debout$dates <- as.POSIXct(debout$dates, format = "%Y-%m-%d %H:%M:%S")
+      day <- debout$DAY
+      
+      #### Getting out variables we need: incubation time and morphology
+      incubation_time <- day[which(debout$E_H>E.Hb)[1]]
+      debout_final <- debout %>% filter(DAY <= 80)
+      return(debout_final)
+    }
+  }
+  # Calling function_1
+  results_1 <- function_1(micro = micro, species = species)
+  micro <- results_1$micro
+  ecto <- results_1$ecto
+  E.G_mult <<- E.G_mult
+  E.0_mult <<- E.0_mult
+  z_mult <<- z_mult
+
+  # Calling function_2 with the outputs of function_1
+  results_2 <<- function_2(micro= micro, ecto = ecto,
+                           E.G_mult = E.G_mult, 
+                           E.0_mult = E.0_mult,
+                           z_mult = z_mult)
+  
+  return(results_2)
+  
+}
+
+
+
+
+
 
 ##############################  MICRO --->  ECTOTHERM ---> LIFE HISTORY MODEL
 ########  This function is used for the simulation that is looped for each gps point
@@ -13,9 +150,9 @@ library(scales)
 ######## clutch mass. Read '#' that will tell you notes for each function
 ####################################
 regional_simulation_egg <- function(longitude, latitude, 
-                          species, # delicata or guchi
-                          region, # AUS, HA, NZ
-                          spatial) {
+                                    species, # delicata or guchi
+                                    region, # AUS, HA, NZ
+                                    spatial) {
   
   function_1 <- function(longitude, latitude, 
                          species, # delicata or guchi
@@ -246,140 +383,10 @@ regional_simulation_egg <- function(longitude, latitude,
   results_2 <<- function_2(micro= micro, ecto = ecto)
   
   return(results_2)
-
-}
-
-
-
-
-
-
-#########################
-##############################  MICRO --->  ECTOTHERM ---> LIFE HISTORY MODEL
-######## 
-####################################
-deb_experiment <- function(micro = micro, species = species,
-                           E.G_mult = 1, # structural costs multiplier
-                           E.0_mult = 1,# energy content of the egg multiplier
-                           z_mult = 1) # DEB scaling factor 
-  {
-  micro <<-micro
-  E.G_mult <<- E.G_mult
-  E.0_mult <<- E.0_mult
-  z_mult <<- z_mult
-  
-  function_1 <- function(micro = micro, species = species) {
-    source(paste0('R/life cycle models/', species, '/parameters_biophys.R'))
-   
-    
-    
-    #############  #############  #############
-    ############# ECTOTHERM MODEL FOR ADULT ANIMAL
-    #############  #############  #############
-    # run ecotherm model 
-    ecto <- ectotherm(Ww_g = Ww_g,
-                      shape = shape,
-                      CT_min = CT_min, 
-                      T_RB_min = T_RB_min,
-                      T_B_min = T_B_min,
-                      T_F_min = T_F_min,
-                      T_pref = T_pref,
-                      T_F_max = T_F_max,
-                      CT_max = CT_max,
-                      alpha_max = alpha_max,
-                      alpha_min = alpha_min,
-                      diurn = diurn,
-                      nocturn = nocturn,
-                      shade_seek = shade_seek,
-                      burrow = burrow,
-                      climb = climb,
-                      shdburrow = shdburrow,
-                      mindepth = mindepth,
-                      maxdepth = maxdepth,
-                      pct_wet = pct_wet,
-                      pct_eyes = pct_eyes)
-    ecto <<- ecto
-    return(list(micro = micro, ecto = ecto))
-  }
-  
-  function_2 <- function(micro, ecto, E.G_mult = E.G_mult, 
-                         E.0_mult = E.0_mult, z_mult = z_mult) {
-    #############  #############  #############  #############
-    ############# DEB MODEL FOR ADULT ANIMAL at gps location
-    #############  #############  #############  #############
-    # deb simulation function
-    source(paste0('R/life cycle models/', species, '/run.DEB.sim.R'))
-    # micro file and dates
-    micro_orig <- micro
-    dates <- micro$dates
-    dates2 <- micro$dates2
-    soil <- as.data.frame(micro$soil)
-    metout <- as.data.frame(micro$metout)
-    humid <- as.data.frame(micro$humid)
-    rainfall <- micro$RAINFALL
-    soilpot <- as.data.frame(cbind(dates,as.data.frame(micro$soilpot)))
-    metout <- as.data.frame(cbind(dates,as.data.frame(micro$metout))) # above ground microclimatic conditions, min shade
-    soil <- as.data.frame(cbind(dates,as.data.frame(micro$soil))) # soil temperatures, minimum shade
-    soilmoist <- as.data.frame(cbind(dates,as.data.frame(micro$soilmoist))) # soil moisture, minimum shade
-    humid <- as.data.frame(cbind(dates,as.data.frame(micro$humid))) # soil humidity, minimum shade
-    environ <- as.data.frame(ecto$environ)
-    
-    
-    ######## Matlab output
-    # assign possible missing parameters
-    source(paste0('R/life cycle models/', species, '/parameters_matlab_silico_DEB.R'))
-    
-    
-    ######## energy mulipliers for function: 
-    E.G <<- E.G*E.G_mult
-    E.0 <<- E.0*E.0_mult
-    z_mult <<- z.mult*z_mult
-    
-    ############################
-    # Simulation start
-    startday <- 1
-    ystart <- 2016
-    for(ystart in 2016:2016){
-      datelay <- as.POSIXct(paste0("1/12/", ystart), format = "%d/%m/%Y")
-      simout <- run.DEB.sim(datelay, 1) # run simulation for how many years?
-      
-      # retrieve outputs
-      ecto <- simout$ecto
-      debout<-as.data.frame(ecto$debout) # DEB model outputs
-      # arranging dates 
-      dates <- micro_orig$dates
-      dates <- dates[simout$start:simout$finish]
-      debout$dates <- dates # add dates
-      
-      ##### adding wet mass with dessication
-      desiccation <- (1 - debout$PCT_DESIC / 100)
-      debout$Wet_mass_g <- debout$WETMASS*desiccation 
-      debout$dates <- as.POSIXct(debout$dates, format = "%Y-%m-%d %H:%M:%S")
-      day <- debout$DAY
-      
-      #### Getting out variables we need: incubation time and morphology
-      incubation_time <- day[which(debout$E_H>E.Hb)[1]]
-      debout_final <- debout %>% filter(DAY <= 80)
-      return(debout_final)
-    }
-  }
-  # Calling function_1
-  results_1 <- function_1(micro = micro, species = species)
-  micro <- results_1$micro
-  ecto <- results_1$ecto
-  E.G_mult <<- E.G_mult
-  E.0_mult <<- E.0_mult
-  z_mult <<- z_mult
-
-  # Calling function_2 with the outputs of function_1
-  results_2 <<- function_2(micro= micro, ecto = ecto,
-                           E.G_mult = E.G_mult, 
-                           E.0_mult = E.0_mult,
-                           z_mult = z_mult)
-  
-  return(results_2)
   
 }
+
+
 
 
 

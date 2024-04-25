@@ -49,9 +49,9 @@ null_23_dev
 null_28_mass
 null_28_dev
 
-# EO 
-E.0
-E.0_sim  <-  data.frame(E.0_sim =round(rnorm(100, mean=E.0, sd=15)))
+# EO variation
+#E.0
+#E.0_sim  <-  data.frame(E.0_sim =round(rnorm(100, mean=E.0, sd=15)))
 
 
 #####  QUICK PLOTS 
@@ -102,6 +102,16 @@ title(main = "L. delicata development 28 C", line = -1)
 # - What is the body mass at "hatch"
 # - What is the hatching time?
 source('R/Functions/simulations.R')
+########################### 28C 
+######## 28C EG 10% increase
+# change EG*1.1
+debout_28_EG_10 <- deb_experiment(micro = micro_28, species = "Lampropholis_delicata",
+                                  E.G_mult = 1.1)
+debout_28_hatch_info_EG_10 <- debout_28_EG_10 %>% filter(DAY == debout_28_EG_10$DAY[which(debout_28_EG_10$E_H>E.Hb)[1]])
+EG_10_dev_28C <- mean(debout_28_hatch_info_EG_10$DAY)
+EG_10_mass_28C <- round(mean(debout_28_hatch_info_EG_10$Wet_mass_g), digits = 3)
+EG_10_dev_28C
+EG_10_mass_28C
 
 ########################### 23C
 ######## 23C EG 10% decrease
@@ -128,23 +138,14 @@ EG_20_mass_23C
 ######## 23C EG 30% decrease
 # change EG*0.7
 debout_23_EG_30 <- deb_experiment(micro = micro_23, species = "Lampropholis_delicata",
-                                  E.G_mult = 1)
+                                  E.G_mult = .7)
 debout_23_hatch_info_EG_30 <- debout_23_EG_30 %>% filter(DAY == debout_23_EG_30$DAY[which(debout_23_EG_30$E_H>E.Hb)[1]])
 EG_30_dev_23C <- mean(debout_23_hatch_info_EG_30$DAY)
 EG_30_mass_23C <- round(mean(debout_23_hatch_info_EG_30$Wet_mass_g), digits = 3)
 EG_30_dev_23C
 EG_30_mass_23C
 
-########################### 28C 
-######## 28C EG 10% increase
-# change EG*1.1
-debout_28_EG_10 <- deb_experiment(micro = micro_28, species = "Lampropholis_delicata",
-                                  E.G_mult = 1.1)
-debout_28_hatch_info_EG_10 <- debout_28_EG_10 %>% filter(DAY == debout_28_EG_10$DAY[which(debout_28_EG_10$E_H>E.Hb)[1]])
-EG_10_dev_28C <- mean(debout_28_hatch_info_EG_10$DAY)
-EG_10_mass_28C <- round(mean(debout_28_hatch_info_EG_10$Wet_mass_g), digits = 3)
-EG_10_dev_28C
-EG_10_mass_28C
+
 
 
 ########################### Plots
@@ -412,35 +413,120 @@ E0_50_time_28
 
 
 
+
+###############################################################################################
+####################################### Changing scaling factor "z_mult" 
+# here z_mult is being manipulated just for parameters below using "z_mult" and not for E_0 calculation. 
+# These changes can be found in the 'run.DEB.sim.R' script. 
+# z_mult is changing for the following parameters:
+# z - zoom factor  (cm), 
+# E_Hb - Maturity at birth (J), 
+# E_Ho - Maturity of embryo at oviposition (J)
+# E_Hj - Maturity at metamorphosis (J)
+# E_Hp - Maturity at puberty (J)
+# E_He - Maturity at eclosion (J) 
+# h_a (Weibull ageing acceleration (1/h2))
+### *** Note the help file for ectotherm() function "Core DEB parameters"
+### ** interchangeably uses z.mult or z_mult. In my "run.DEB.sim.R" code
+### * I have made "z.mult" the only multipler for just E_0 but stays same
+source('R/Functions/simulations.R')
+
+########################### 23C
+######## 23C Zoom mult 1.2
+debout_23_zoom_20pct_increase <- deb_experiment(micro = micro_23, species = "Lampropholis_delicata", 
+                                                z_mult = 1.2)
+debout_23_hatch_info_zoom_20pct_increase <- debout_23_zoom_20pct_increase %>% 
+  filter(DAY == debout_23_zoom_20pct_increase$DAY[which(debout_23_zoom_20pct_increase$E_H>E.Hb)[1]])
+zoom_20pct_increase_dev_23C <- mean(debout_23_hatch_info_zoom_20pct_increase$DAY)
+zoom_20pct_increase_mass_23C <- round(mean(debout_23_hatch_info_zoom_20pct_increase$Wet_mass_g), digits = 3)
+zoom_20pct_increase_dev_23C
+zoom_20pct_increase_mass_23C
+########################### 23C
+######## 23C Zoom mult 1.1
+debout_23_zoom_10pct_increase <- deb_experiment(micro = micro_23, species = "Lampropholis_delicata",
+                                       z_mult = 1.1)
+debout_23_hatch_info_zoom_10pct_increase <- debout_23_zoom_10pct_increase %>% 
+  filter(DAY == debout_23_zoom_10pct_increase$DAY[which(debout_23_zoom_10pct_increase$E_H>E.Hb)[1]])
+zoom_10pct_increase_dev_23C <- mean(debout_23_hatch_info_zoom_10pct_increase$DAY)
+zoom_10pct_increase_mass_23C <- round(mean(debout_23_hatch_info_zoom_10pct_increase$Wet_mass_g), digits = 3)
+zoom_10pct_increase_dev_23C
+zoom_10pct_increase_mass_23C
 ########################### 23C
 ######## 23C Zoom mult .9
-# change EG*0.9
-debout_23_zoom_90pct <- deb_experiment(micro = micro_23, species = "Lampropholis_delicata",z_mult = .9)
-debout_23_hatch_info_zoom_90pct <- debout_23_zoom_90pct %>% 
-  filter(DAY == debout_23_zoom_90pct$DAY[which(debout_23_zoom_90pct$E_H>E.Hb)[1]])
-zoom_90pct_dev_23C <- mean(debout_23_hatch_info_zoom_90pct$DAY)
-zoom_90pct_mass_23C <- round(mean(debout_23_hatch_info_zoom_90pct$Wet_mass_g), digits = 3)
-zoom_90pct_dev_23C
-zoom_90pct_mass_23C
-
-
+debout_23_zoom_10pct_decrease <- deb_experiment(micro = micro_23, species = "Lampropholis_delicata",
+                                                z_mult = .9)
+debout_23_hatch_info_zoom_10pct_decrease <- debout_23_zoom_10pct_decrease %>% 
+  filter(DAY == debout_23_zoom_10pct_decrease$DAY[which(debout_23_zoom_10pct_decrease$E_H>E.Hb)[1]])
+zoom_10pct_decrease_dev_23C <- mean(debout_23_hatch_info_zoom_10pct_decrease$DAY)
+zoom_10pct_decrease_mass_23C <- round(mean(debout_23_hatch_info_zoom_10pct_decrease$Wet_mass_g), digits = 3)
+zoom_10pct_decrease_dev_23C
+zoom_10pct_decrease_mass_23C
 ########################### 23C
 ######## 23C Zoom mult .8
-debout_23_zoom_80pct <- deb_experiment(micro = micro_23, species = "Lampropholis_delicata", z_mult = .8)
-debout_23_hatch_info_zoom_80pct <- debout_23_zoom_80pct %>% 
-  filter(DAY == debout_23_zoom_80pct$DAY[which(debout_23_zoom_80pct$E_H>E.Hb)[1]])
-zoom_80pct_dev_23C <- mean(debout_23_hatch_info_zoom_80pct$DAY)
-zoom_80pct_mass_23C <- round(mean(debout_23_hatch_info_zoom_80pct$Wet_mass_g), digits = 3)
-zoom_80pct_dev_23C
-zoom_80pct_mass_23C
+debout_23_zoom_20pct_decrease <- deb_experiment(micro = micro_23, species = "Lampropholis_delicata", 
+                                                z_mult = .8)
+debout_23_hatch_info_zoom_20pct_decrease <- debout_23_zoom_20pct_decrease %>% 
+  filter(DAY == debout_23_zoom_20pct_decrease$DAY[which(debout_23_zoom_20pct_decrease$E_H>E.Hb)[1]])
+zoom_20pct_decrease_dev_23C <- mean(debout_23_hatch_info_zoom_20pct_decrease$DAY)
+zoom_20pct_decrease_mass_23C <- round(mean(debout_23_hatch_info_zoom_20pct_decrease$Wet_mass_g), digits = 3)
+zoom_20pct_decrease_dev_23C
+zoom_20pct_decrease_mass_23C
 
 
-########################### 23C
-######## 23C Zoom mult .7
-debout_23_zoom_70pct <- deb_experiment(micro = micro_23, species = "Lampropholis_delicata", z_mult = .7)
-debout_23_hatch_info_zoom_70pct <- debout_23_zoom_70pct %>% 
-  filter(DAY == debout_23_zoom_70pct$DAY[which(debout_23_zoom_70pct$E_H>E.Hb)[1]])
-zoom_70pct_dev_23C <- mean(debout_23_hatch_info_zoom_70pct$DAY)
-zoom_70pct_mass_23C <- round(mean(debout_23_hatch_info_zoom_70pct$Wet_mass_g), digits = 3)
-zoom_70pct_dev_23C
-zoom_70pct_mass_23C
+########################### 28
+######## 28C Zoom mult 1.2
+debout_28_zoom_20pct_increase <- deb_experiment(micro = micro_28, species = "Lampropholis_delicata", 
+                                                z_mult = 1.2)
+debout_28_hatch_info_zoom_20pct_increase <- debout_28_zoom_20pct_increase %>% 
+  filter(DAY == debout_28_zoom_20pct_increase$DAY[which(debout_28_zoom_20pct_increase$E_H>E.Hb)[1]])
+zoom_20pct_increase_dev_28C <- mean(debout_28_hatch_info_zoom_20pct_increase$DAY)
+zoom_20pct_increase_mass_28C <- round(mean(debout_28_hatch_info_zoom_20pct_increase$Wet_mass_g), digits = 3)
+zoom_20pct_increase_dev_28C
+zoom_20pct_increase_mass_28C
+########################### 28
+######## 28C Zoom mult 1.1
+debout_28_zoom_10pct_increase <- deb_experiment(micro = micro_28, species = "Lampropholis_delicata", 
+                                                z_mult = 1.1)
+debout_28_hatch_info_zoom_10pct_increase <- debout_28_zoom_10pct_increase %>% 
+  filter(DAY == debout_28_zoom_10pct_increase$DAY[which(debout_28_zoom_10pct_increase$E_H>E.Hb)[1]])
+zoom_10pct_increase_dev_28C <- mean(debout_28_hatch_info_zoom_10pct_increase$DAY)
+zoom_10pct_increase_mass_28C <- round(mean(debout_28_hatch_info_zoom_10pct_increase$Wet_mass_g), digits = 3)
+zoom_10pct_increase_dev_28C
+zoom_10pct_increase_mass_28C
+
+########################### 28
+######## 28C Zoom mult .9
+debout_28_zoom_10pct_decrease <- deb_experiment(micro = micro_28, species = "Lampropholis_delicata", 
+                                                z_mult = .9)
+debout_28_hatch_info_zoom_10pct_decrease <- debout_28_zoom_10pct_decrease %>% 
+  filter(DAY == debout_28_zoom_10pct_decrease$DAY[which(debout_28_zoom_10pct_decrease$E_H>E.Hb)[1]])
+zoom_10pct_decrease_dev_28C <- mean(debout_28_hatch_info_zoom_10pct_decrease$DAY)
+zoom_10pct_decrease_mass_28C <- round(mean(debout_28_hatch_info_zoom_10pct_decrease$Wet_mass_g), digits = 3)
+zoom_10pct_decrease_dev_28C
+zoom_10pct_decrease_mass_28C
+######## 28C Zoom mult .9
+debout_28_zoom_20pct_decrease <- deb_experiment(micro = micro_28, species = "Lampropholis_delicata", 
+                                                z_mult = .8)
+debout_28_hatch_info_zoom_20pct_decrease <- debout_28_zoom_20pct_decrease %>% 
+  filter(DAY == debout_28_zoom_20pct_decrease$DAY[which(debout_28_zoom_20pct_decrease$E_H>E.Hb)[1]])
+zoom_20pct_decrease_dev_28C <- mean(debout_28_hatch_info_zoom_20pct_decrease$DAY)
+zoom_20pct_decrease_mass_28C <- round(mean(debout_28_hatch_info_zoom_20pct_decrease$Wet_mass_g), digits = 3)
+zoom_20pct_decrease_dev_28C
+zoom_20pct_decrease_mass_28C
+
+
+
+
+########################### MASS DATA
+######## 23C mass data
+zoom_20pct_increase_mass_23C
+zoom_10pct_increase_mass_23C
+zoom_10pct_decrease_mass_23C
+zoom_20pct_decrease_mass_23C
+######## 28C mass data
+zoom_20pct_increase_mass_28C
+zoom_10pct_increase_mass_28C
+zoom_10pct_decrease_mass_28C
+zoom_20pct_decrease_mass_28C
+
+
